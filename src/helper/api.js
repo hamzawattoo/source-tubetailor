@@ -20,8 +20,8 @@ export async function getRequestApi(url, parameter) {
     });
     return response.data;
   } catch (error) {
-    console.error("Error in API request:", error);
-    showErrorToast(error.message); // Show error message in toast
+    console.error("Error in API request:", error.response.data.message);
+    showErrorToast(error.response.data.message); // Show error message in toast
     throw error; // Re-throw the error to propagate it further if needed
   }
 }
@@ -41,8 +41,8 @@ export async function postRequest(url, parameter) {
     });
     return response.data;
   } catch (error) {
-    console.error("Error in API request:", error);
-    showErrorToast(error.message); // Show error message in toast
+    console.error("Error in API request:", error.response.data.message);
+    showErrorToast(error.response.data.message); // Show error message in toast
     throw error; // Re-throw the error to propagate it further if needed
   }
 }

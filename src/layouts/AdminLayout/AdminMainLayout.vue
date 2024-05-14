@@ -158,6 +158,9 @@
       </div>
 
       <main class="w-full min-h-screen py-3 sm:py-10">
+        <div class="x-4 sm:px-6 lg:px-8">
+          <Stats />
+        </div>
         <div class="px-4 sm:px-6 lg:px-8">
           <slot />
         </div>
@@ -172,6 +175,7 @@ import smallLogo from "@/assets/smallLogo.png";
 import Modal from "@/components/Modal.vue";
 import { ref, onMounted } from "vue";
 import Tabs from "@/components/Tabs.vue";
+import Stats from "@/components/AdminPanel/Stats.vue";
 import {
   Dialog,
   DialogPanel,
