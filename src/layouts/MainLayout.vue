@@ -60,7 +60,7 @@
     </TransitionRoot>
 
     <!-- Static sidebar for desktop -->
-    <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+    <div class="hidden lg:fixed lg:inset-y-0 lg:z-10 lg:flex lg:w-72 lg:flex-col">
       <!-- Sidebar component, swap this element with another sidebar if you like -->
       <div class="example flex flex-col px-6 py-4 pb-4 overflow-y-auto bg-white border-r border-gray-200 grow gap-y-5">
         <div class="flex items-center h-16 shrink-0">

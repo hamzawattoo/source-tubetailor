@@ -60,7 +60,7 @@
     </TransitionRoot>
 
     <!-- Static sidebar for desktop -->
-    <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+    <div class="hidden lg:fixed lg:inset-y-0 lg:z-10 lg:flex lg:w-72 lg:flex-col">
       <div class="bg-black text-xl text-white font-semibold py-3 text-center">
         Admin Panel
       </div>
@@ -68,7 +68,7 @@
       <div class="example flex flex-col px-6 py-16 pb-4 overflow-y-auto bg-white border-r border-gray-200 grow gap-y-5">
 
         <div class="flex items-center h-16 shrink-0">
-          <img class="w-auto h-16" :src="Logo" alt="Your Company" />
+          <img class="w-auto h-16" src="" alt="Your Company" />
         </div>
 
         <nav class="flex flex-col flex-1">
