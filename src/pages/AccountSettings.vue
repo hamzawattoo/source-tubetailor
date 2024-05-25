@@ -92,8 +92,50 @@ import TableLayout from "@/layouts/TableLayout.vue";
             >
           </div>
           <div class="space-y-4">
+
             <label
               class="relative block cursor-pointer rounded-lg border border-[#FE4442] bg-white px-6 py-5 shadow-sm focus:outline-none sm:flex sm:justify-between"
+            v-if="this.purchasePlan?.name"
+            >
+              <input
+                type="radio"
+                name="server-size"
+                value="Hobby"
+                class="sr-only"
+                aria-labelledby="server-size-0-label"
+                aria-describedby="server-size-0-description-0 server-size-0-description-1"
+              />
+              <span class="flex flex-row justify-between w-full text-sm">
+                <span
+                  id="server-size-0-label"
+                  class="font-bold text-lg text-black"
+                  >Basic
+                <router-link to="/pricing-plans"
+                ><span
+                        class="bg-[#EFF4FD] hover:bg-white text-[#004EB9] font-semibold text-sm px-5 py-1 rounded-full"
+                >View Plan</span
+                ></router-link
+                >
+                  <span @click="canclePlan()"
+                  ><span
+                          class="bg-[#EFF4FD] hover:bg-white text-[#004EB9] font-semibold text-sm px-5 py-1 rounded-full"
+                  >Unsubscribe</span
+                  ></span
+                  >
+                  <span @click="resumePlan()"
+                  ><span
+                          class="bg-[#EFF4FD] hover:bg-white text-[#004EB9] font-semibold text-sm px-5 py-1 rounded-full"
+                  >Pause</span
+                  ></span
+                  >
+                </span
+                >
+                <span class="font-bold text-lg text-black">${{parseFloat(this.purchasePlan?.price).toFixed(2)}}</span>
+              </span>
+            </label>
+            <label
+              class="relative block cursor-pointer rounded-lg border border-[#FE4442] bg-white px-6 py-5 shadow-sm focus:outline-none sm:flex sm:justify-between"
+            v-else
             >
               <input
                 type="radio"
@@ -112,38 +154,6 @@ import TableLayout from "@/layouts/TableLayout.vue";
                 <span class="font-bold text-lg text-black">FREE</span>
               </span>
             </label>
-            <label
-              class="relative block cursor-pointer rounded-lg border bg-white px-6 py-5 shadow-sm focus:outline-none sm:flex sm:justify-between"
-            >
-              <input
-                type="radio"
-                name="server-size"
-                value="Hobby"
-                class="sr-only"
-                aria-labelledby="server-size-0-label"
-                aria-describedby="server-size-0-description-0 server-size-0-description-1"
-              />
-              <span class="flex flex-row w-full justify-between text-sm">
-                <div class="flex flex-col xl:flex-row items-center gap-4">
-                  <span
-                    id="server-size-0-label"
-                    class="font-bold text-lg text-black"
-                    >Professional</span
-                  >
-                  <router-link to="/pricing-plans"
-                    ><span
-                      class="bg-[#EFF4FD] hover:bg-white text-[#004EB9] font-semibold text-sm px-5 py-1 rounded-full"
-                      >View Plan</span
-                    ></router-link
-                  >
-                </div>
-
-                <p class="text-gray-500 text-lg">
-                  <span class="font-bold text-lg text-black">$30/</span>
-                  month
-                </p>
-              </span>
-            </label>
           </div>
         </div>
       </div>
@@ -151,7 +161,67 @@ import TableLayout from "@/layouts/TableLayout.vue";
   </MainLayout>
 </template>
 
-<script></script>
+<script>
+  import {ref, computed} from "vue";
+  import {getRequestApi, putRequest} from "../helper/api";
+
+  export default {
+
+    onMounted() {
+    },
+    data() {
+      return {
+        planData: ref(null),
+        purchasePlan: ref(null)
+      }
+    },
+    mounted() {
+      this.fetchPlan();
+
+
+    },
+    methods: {
+      async fetchPlan() {
+        try {
+          const response = await getRequestApi('plan');
+          this.planData = response;
+          console.log(response.current_plan)
+          if(this.planData?.current_plan){
+            const response = await getRequestApi(`/plan/${this.planData?.current_plan}`);
+            this.purchasePlan = response.plan
+          }
+
+        } catch (error) {
+          console.error('Error fetching plan:', error);
+        }
+      },
+      async canclePlan() {
+        if (confirm("Are you sure?")) {
+          try {
+            const response = await putRequest('/plan/cancel');
+            this.planData = response;
+            alert(this.planData.message)
+            this.fetchPlan()
+          } catch (error) {
+            console.error('Error fetching plan:', error);
+          }
+        }
+      },
+      async resumePlan() {
+        if (confirm("Are you sure?")) {
+          try {
+            const response = await putRequest('/plan/resume');
+            this.planData = response;
+            alert(this.planData.message)
+            this.fetchPlan()
+          } catch (error) {
+            console.error('Error fetching plan:', error);
+          }
+        }
+      }
+    },
+  };
+</script>
 
 <style scoped>
 .font {

@@ -26,8 +26,9 @@ const router = createRouter({
       component: Landing,
     },
     {
-      path: "/purchase",
+      path: "/plan/:slug",
       name: "purchase",
+      props: true,
       component: purchase,
     },
     {

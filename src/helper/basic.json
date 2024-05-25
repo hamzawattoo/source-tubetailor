@@ -1,0 +1,52 @@
+[
+  {
+    "title": "Optimisation credits (across all platforms)",
+    "description": "30 per month",
+    "customClass": "text-green-500"
+  },
+  {
+    "title": "Marketing",
+    "description": "Not available",
+    "customClass": "text-red-500"
+  },
+  {
+    "title": "Keyword research",
+    "description": "5 per month",
+    "customClass": "text-green-500"
+  },
+  {
+    "title": "Competition",
+    "description": "Not available",
+    "customClass": "text-red-500"
+  },
+  {
+    "title": "Thumbnail Generation",
+    "description": "Not available",
+    "customClass": "text-red-500"
+  },
+  {
+    "title": "Voiceover",
+    "description": "Not available",
+    "customClass": "text-red-500"
+  },
+  {
+    "title": "Channel worth",
+    "description": "Yes",
+    "customClass": "text-green-500"
+  },
+  {
+    "title": "Topic ideas",
+    "description": "5 ideas every month",
+    "customClass": "text-green-500"
+  },
+  {
+    "title": "Content generator",
+    "description": "Not available",
+    "customClass": "text-red-500"
+  },
+  {
+    "title": "Community tools",
+    "description": "Not available",
+    "customClass": "text-red-500"
+  }
+]

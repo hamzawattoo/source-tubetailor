@@ -89,7 +89,7 @@
               <!-- /.banner-content -->
             </div>
             <!-- /.col-md-5 -->
-            
+
             <div class="col-lg-6">
               <div class="animate-promo-mockup">
                 <img
@@ -524,8 +524,8 @@
           <span class="annual_tab_title tab-btn"> Annual </span>
         </nav>
 
-        <div class="row advanced-pricing-table">
-          <div class="col-lg-4">
+        <div class="row advanced-pricing-table" v-if="plans?.plans">
+          <div class="col-lg-4" v-for="(plan,index) in plans.plans" :key="index">
             <div
               class="pricing-table style-two price-two wow pixFadeLeft"
               data-wow-delay="0.5s"
@@ -534,362 +534,36 @@
                 <div class="annual_price">
                   <h2 class="price">$0.00</h2>
                 </div>
-                <!-- /.annual_price -->
-
                 <div class="monthly_price">
-                  <h2 class="price">$0.00</h2>
+                  <h2 class="price">${{parseFloat(plan.price).toFixed(2)}}</h2>
                 </div>
-                <!-- /.monthly_price -->
-
-                <h3 class="price-title">Basic</h3>
+                <h3 class="price-title">{{plan.name}}</h3>
                 <p>Free</p>
               </div>
               <!-- /.pricing-header -->
-              <ul class="price-feture !list-disc">
-                <li class="">
-                  <div class="flex items-start">
-                    <span class="max-w-[50%] text-sm"
-                      >Optimisation credits (across all platforms)</span
-                    >
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-nowrap text-xs"
-                      >30 per month</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Marketing</span>
-                    <span class="text-red-500 whitespace-nowrap text-xs"
-                      >Not available</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Keyword research</span>
-                    <span class="text-green-500 whitespace-nowrap text-xs"
-                      >5 per month</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Competition</span>
-                    <span class="text-red-500 whitespace-nowrap text-xs"
-                      >Not available</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Thumbnail Generation</span>
-                    <span class="text-red-500 whitespace-nowrap text-xs"
-                      >Not available</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Voiceover</span>
-                    <span class="text-red-500 whitespace-nowrap text-xs"
-                      >Not available</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Channel worth</span>
-                    <span class="text-green-500 whitespace-nowrap text-xs"
-                      >Yes</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Topic ideas</span>
-                    <span class="text-green-500 whitespace-nowrap text-xs"
-                      >5 ideas every month</span
-                    >
-                  </div>
-                </li>
-
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Content generator</span>
-                    <span class="text-red-500 whitespace-nowrap text-xs"
-                      >Not available</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Community tools</span>
-                    <span class="text-red-500 whitespace-nowrap text-xs"
-                      >Not available</span
-                    >
-                  </div>
-                </li>
-              </ul>
+                <ul class="price-feture !list-disc">
+                  <li v-for="basicPlan in planDescription[index]" class="">
+                    <div class="flex items-start">
+                      <span class="max-w-[50%] text-sm"
+                        >{{basicPlan.title}}
+                      </span
+                      >
+                      <span :class="basicPlan.customClass"
+                              class="max-w-[50%] ml-auto whitespace-wrap text-right text-xs"
+                        >{{basicPlan.description}}</span
+                      >
+                    </div>
+                  </li>
+                </ul>
 
               <div class="action text-left">
-                <a href="#" class="pix-btn btn-outline-two">Get Started</a>
+                <router-link :to="'/plan/'+plan.slug"
+                ><span class="pix-btn btn-outline-two"
+                >Get Started</span
+                ></router-link
+                >
               </div>
             </div>
-            <!-- /.pricing-table -->
-          </div>
-          <!-- /.col-lg-4 -->
-
-          <div class="col-lg-4">
-            <div
-              class="pricing-table color-two style-two price-two featured wow pixFadeLeft"
-              data-wow-delay="0.7s"
-            >
-              <div class="trend">
-                <p>Popular</p>
-              </div>
-
-              <div class="pricing-header pricing-amount">
-                <div class="annual_price">
-                  <h2 class="price">$360</h2>
-                </div>
-                <!-- /.annual_price -->
-
-                <div class="monthly_price">
-                  <h2 class="price">$30</h2>
-                </div>
-                <!-- /.monthly_price -->
-
-                <h3 class="price-title">Lite</h3>
-                <p class="invisible">Only for first month</p>
-              </div>
-              <!-- /.pricing-header -->
-
-              <ul class="price-feture !list-disc">
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span class="max-w-[50%]"
-                      >Optimisation credits (across all platforms)</span
-                    >
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-nowrap text-sm text-xs"
-                      >100 per month</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Marketing</span>
-                    <span
-                      class="text-green-500 whitespace-nowrap text-sm text-xs"
-                      >25</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Keyword research</span>
-                    <span
-                      class="text-green-500 whitespace-nowrap text-sm text-xs"
-                      >25</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Competition</span>
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-wrap text-right text-xs"
-                      >add 1 competitor for each platorm</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm gap-3">
-                    <span>Thumbnail Generation</span>
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-wrap text-right text-xs"
-                      >25 thumbnails/cover every month</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Voiceover</span>
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-wrap text-right text-xs"
-                      >25 voice over every month</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Channel worth</span>
-                    <span
-                      class="text-green-500 whitespace-nowrap text-sm text-xs"
-                      >Yes</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Topic ideas</span>
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-wrap text-right text-xs"
-                      >25 ideas every month</span
-                    >
-                  </div>
-                </li>
-
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Content generator</span>
-                    <span
-                      class="text-green-500 whitespace-nowrap text-xs"
-                      >25</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Community tools</span>
-                    <span
-                      class="text-green-500 whitespace-nowrap text-xs"
-                      >Yes</span
-                    >
-                  </div>
-                </li>
-              </ul>
-
-              <div class="action text-left">
-                <a href="#" class="pix-btn btn-outline-two">Get Started</a>
-              </div>
-            </div>
-            <!-- /.pricing-table -->
-          </div>
-          <!-- /.col-lg-4 -->
-
-          <div class="col-lg-4">
-            <div
-              class="pricing-table color-three style-two price-two wow pixFadeLeft"
-              data-wow-delay="0.9s"
-            >
-              <div class="pricing-header pricing-amount">
-                <div class="annual_price">
-                  <h2 class="price">$600</h2>
-                </div>
-                <!-- /.annual_price -->
-
-                <div class="monthly_price">
-                  <h2 class="price">$50</h2>
-                </div>
-                <!-- /.monthly_price -->
-
-                <h3 class="price-title">Pro</h3>
-                <p class="invisible">Only for first month</p>
-              </div>
-              <!-- /.pricing-header -->
-
-              <ul class="price-feture !list-disc">
-                <li class="">
-                  <div class="flex items-start">
-                    <span class="flex items-start justify-between text-sm max-w-[50%]"
-                      >Optimisation credits (across all platforms)</span
-                    >
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-nowrap text-xs"
-                      >100 per month</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Marketing</span>
-                    <span
-                      class="text-green-500 whitespace-nowrap text-sm text-xs"
-                      >25</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Keyword research</span>
-                    <span
-                      class="text-green-500 whitespace-nowrap text-xs"
-                      >25</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Competition</span>
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-wrap text-right text-xs"
-                      >add 1 competitor for each platorm</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm gap-3">
-                    <span>Thumbnail Generation</span>
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-wrap text-right text-xs"
-                      >25 thumbnails/cover every month</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm gap-3">
-                    <span>Voiceover</span>
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-wrap text-right text-xs"
-                      >25 voice over every month</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Channel worth</span>
-                    <span
-                      class="text-green-500 whitespace-nowrap text-sm text-xs"
-                      >Yes</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Topic ideas</span>
-                    <span
-                      class="max-w-[50%] ml-auto text-green-500 whitespace-wrap text-right text-xs"
-                      >25 ideas every month</span
-                    >
-                  </div>
-                </li>
-
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Content generator</span>
-                    <span
-                      class="text-green-500 whitespace-nowrap text-sm text-xs"
-                      >25</span
-                    >
-                  </div>
-                </li>
-                <li class="">
-                  <div class="flex items-start justify-between text-sm">
-                    <span>Community tools</span>
-                    <span
-                      class="text-green-500 whitespace-nowrap text-xs"
-                      >Yes</span
-                    >
-                  </div>
-                </li>
-              </ul>
-
-              <div class="action text-left"></div>
-              <a href="#" class="pix-btn btn-outline-two">Get Started</a>
-            </div>
-
             <!-- /.pricing-table -->
           </div>
           <!-- /.col-lg-4 -->
@@ -1170,6 +844,8 @@ import readyLeft from "@/assets/ready-left.png";
 import readyRight from "@/assets/ready-right.png";
 import top from "@/assets/top.png";
 import { postRequest } from "../helper/api.js";
+import basicPlans from "../helper/basic.json";
+import proPlans from "../helper/pro.json";
 import useToastHook from "../hooks/ToastMessage";
 const { showSuccessToast, showErrorToast } = useToastHook();
 import { ref } from "vue";
@@ -1187,6 +863,7 @@ const togglePlay = () => {
 const isAuthenticated = localStorage.getItem('token');
 const api_baseURL = 'https://backend.tubetailor.ai/api/';
 import axios from 'axios';
+import {getRequestApi} from "../helper/api";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = api_baseURL;
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
@@ -1217,6 +894,27 @@ async function logout() {
     localStorage.removeItem("loglevel");
     console.error("Error in YouTube marketing:", error);
     showErrorToast(error.response?.data?.message || "An error occurred during YouTube marketing");
+  }
+}
+const plans = ref();
+const planDescription = [
+  basicPlans,
+  proPlans,
+  proPlans
+];
+getPlans()
+async function getPlans() {
+  try {
+    plans.value = await getRequestApi("plans");
+    console.log(plans)
+    //   localStorage.removeItem("token");
+    //   localStorage.removeItem("loglevel");
+      // window.location.href = "/";
+  } catch (error) {
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("loglevel");
+    // console.error("Error in YouTube marketing:", error);
+    // showErrorToast(error.response?.data?.message || "An error occurred during YouTube marketing");
   }
 }
 
