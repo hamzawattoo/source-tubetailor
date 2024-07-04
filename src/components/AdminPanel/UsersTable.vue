@@ -12,7 +12,7 @@
         </div>
 
         <!-- Filter select -->
-        <div>
+        <div class="">
             <label class="text-sm sm:text-lg text-gray-800 font-medium" for="filter">Filter:</label>
             <select
                 class="px-4 py-2.5 bg-white styleCard rounded-md col-span-1 md:col-span-3 shadow-sm border !border-gray-200"
@@ -29,7 +29,8 @@
             <label class="text-sm sm:text-lg text-gray-800 font-medium" for="filter">Sort By:</label>
             <select v-model="sortBy" id="sort_by"
                 class="px-4 py-2.5 bg-white styleCard rounded-md col-span-1 md:col-span-3 shadow-sm border !border-gray-200">
-                <option selected value="asc">Ascending</option>
+                <option value="">Sort by</option>
+                <option value="asc">Assending</option>
                 <option value="desc">Descending</option>
             </select>
         </div>
@@ -40,6 +41,7 @@
         <div class="flex-1" v-if="!showLoader">
             Showing {{ users?.length }} users
         </div>
+      <div class="flex-1 flex flex-wrap gap-4 justify-end">
         <div class="flex-1 w-full max-w-[250px]">
             <select
                 class="slider flex items-center justify-between bg-white w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-red-500 sm:text-sm sm:leading-6 text-start"
@@ -65,6 +67,7 @@
 
             </button>
         </div>
+      </div>
        </div>
         <div class="px-4 sm:px-6 lg:px-8 w-full">
             <div class="mt-8 flow-root w-full">
@@ -109,6 +112,9 @@
         </div>
         <div v-if="showLoader" class="text-center">
             Loading...
+        </div>
+        <div v-if="users?.length === 0" class="text-[13px] text-red-600">
+            No users found for the selected filter.
         </div>
     </tableLayout>
 
@@ -193,7 +199,7 @@ import { getRequestApi } from "@/helper/api.js";
 const users = ref([]);
 const transactions = ref([]);
 const searchQuery = ref("");
-const sortBy = ref("asc");
+const sortBy = ref("");
 const planID = ref("");
 const isModalOpen = ref(false);
 const showLoader = ref(true);
@@ -257,18 +263,22 @@ const debouncedGetAdminUsers = async () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(async () => {
         const queryParams = {
-            q: searchQuery.value,
-            plan_id: planID.value,
-            order_by: sortBy.value,
-            year: selectedYear.value,
-            month: selectedMonthIndex.value + 1,
+            // order_by: sortBy.value.toString(),
+            year: selectedYear.value ?? "",
+            month: selectedMonthIndex.value + 1 ?? "",
             per_page: 10,
             page: 1,
         };
+        if(searchQuery.value){
+            queryParams.q = searchQuery.value
+        }
+        if(planID.value){
+            queryParams.plan_id = planID.value
+        }
 
         try {
             showLoader.value = true;
-            const response = await getRequestApi("/admin/users", { params: queryParams });
+            const response = await getRequestApi("/admin/users", queryParams );
             showLoader.value = false;
             users.value = response.users;
             console.log("Fetched users:", users.value);

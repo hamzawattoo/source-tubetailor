@@ -22,19 +22,24 @@
           class="w-full h-50 px-4 py-4 bg-white outline-none rounded-xl bg-shadow border border-gray-200">
         </textarea>
         </div>
+        <!-- {{ youtubeLink }} <pre>{{ selectedFile?.name }}</pre> -->
         <div class="w-full h-50 px-4 py-4 bg-white outline-none rounded-xl bg-shadow border md:col-span-1">
-         <div class="flex flex-col items-baseline gap-2 justify-between">
-          <p class="font-medium text-gray-800">Upload Text</p>
-          <div class="w-full text-end">
-            <button class="text-sm px-[20px] py-[4px] rounded-full bg-red-600 text-white">
-            Browse
-          </button>
+          <div class="flex flex-col items-baseline gap-2 justify-between">
+            <p class="font-medium text-gray-800">Upload Text</p>
+            <div class="text-sm text-red-400">
+             <span class="text-gray-600">File name:</span> {{ selectedFile?.name }}
+            </div>
+            <div class="w-full text-end">
+              <label for="fileInput" class="text-sm px-[20px] py-[4px] rounded-full bg-red-600 text-white cursor-pointer">
+                Browse
+                <input id="fileInput" type="file" class="hidden" @change="handleFileChange">
+              </label>
+            </div>
           </div>
-         </div>
-        <div class="flex flex-col gap-2 mt-6">
-          <p class="font-medium text-gray-800">Youtube Link</p>
-        <input class="px-4 py-2 bg-white outline-none rounded-md bg-shadow border" placeholder="https://www.youtube.com/watch?" type="" name="" value="">
-        </div>
+          <div class="flex flex-col gap-2 mt-6">
+            <p class="font-medium text-gray-800">Youtube Link</p>
+            <input v-model="youtubeLink" class="px-4 py-2 bg-white outline-none rounded-md bg-shadow border" placeholder="https://www.youtube.com/watch?" type="text">
+          </div>
         </div>
        </div>
         <div class="flex items-center justify-end">
@@ -379,7 +384,8 @@ const recommendedDescription3 = ref('');
 const recommendedIdea1 = ref('');
 const recommendedIdea2 = ref('');
 const recommendedIdea3 = ref('');
-
+const selectedFile = ref(null);
+const youtubeLink = ref('');
 const allresults = ref([]);
 const result1 = ref({});
 const result2 = ref({});
@@ -395,6 +401,10 @@ function changeTabMarketing(tab) {
 const onSuccess = () => {
   showSuccessToast("Copied");
 };
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    selectedFile.value = file;
+  };
 const people = [
   { data : 'Youtube Tag' },
   { data : 'Youtube Tag' },
@@ -415,7 +425,7 @@ async function youtubeOptimization() {
 
   try {
     const optimizationResponse = await postRequest("youtube/optimization", {
-      script: textValue.value,
+      script: textValue.value, link: youtubeLink.value, file: selectedFile,
     });
 
     console.log(optimizationResponse.results, 'data');
