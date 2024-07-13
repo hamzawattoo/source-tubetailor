@@ -210,14 +210,14 @@
                   <span v-else v-for="person in people" :key="person.email"
                     class="px-3 py-1 bg-[#EFF4FD] text-gray-500 rounded-full text-[12px] whitespace-nowrap flex">{{ person.data }}</span>
               </div>
-             
+
             </div>
             <!-- Content 2 in the second column -->
-           
+
            </div>
-           
-        </div> 
-               
+
+        </div>
+
 
             <div class="p-4 bg-white bg-shadow rounded-xl border md:col-span-2">
               <!-- Your content here -->
@@ -320,7 +320,7 @@
                       </ListboxOption>
                       </div>
                     </div>
-                     
+
                     </ListboxOptions>
                   </transition>
                 </div>
@@ -329,7 +329,7 @@
               <div class="flex flex-col gap-4 items-start py-4">
                 <div class="flex justify-end w-full">
                   <button
-          
+
                     class="px-[40px] py-[6px] rounded-full bg-youtube text-white"
                     @click="voiceover()">
                     Generate
@@ -1294,7 +1294,6 @@ export default {
           this.selected = this.peopleVoiceOver[0];
         }
       } catch (error) {
-        this.showErrorToast(error);
         this.showLoader = false;
       }
     },
@@ -1316,10 +1315,8 @@ export default {
         });
         this.showLoader = false;
         this.apiResponse = response;
-        console.log(this.apiResponse);
       } catch (error) {
         this.showLoader = false;
-        this.showErrorToast(error);
       }
       setTimeout(() => {
         this.apiErrors = [];
@@ -1352,7 +1349,6 @@ export default {
         console.log(this.voiceOverResult);
       } catch (error) {
         this.showLoader = false;
-        this.showErrorToast(error);
       }
       setTimeout(() => {
         this.apiErrors = [];

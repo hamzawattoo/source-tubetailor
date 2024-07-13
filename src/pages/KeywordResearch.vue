@@ -46,7 +46,7 @@
                   <p class="bg-yellow-400 rounded-full px-3 py-2 text-[12px] text-black font-medium">
                     Seraches Per Month
                   </p>
-                  
+
                 </div>
               </div>
               <div>
@@ -117,7 +117,7 @@
                     currentTabMarketing === 1 ? 'bg-youtube text-white' : '',
                   ]">
                   New keywords
-                  </button> 
+                  </button>
                    <button @click="changeTabMarketing(2)" :class="[
                     'px-3 py-2 text-xs border  rounded-full',
                     currentTabMarketing === 2
@@ -142,7 +142,7 @@
                       Overall
                     </th>
                     <th scope="col" class="rounded-r-lg px-3 py-3.5 text-right text-sm font-semibold">
-                      
+
                     </th>
                   </tr>
                 </thead>
@@ -180,7 +180,7 @@
                         <svg v-else="isTopicSaved[index]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-[#FE4442]">
                           <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z" clip-rule="evenodd" />
                         </svg>
-                     </button> 
+                     </button>
                     </td>
                   </tr>
                   <tr v-else  v-for="(keywordDataDefault, indexDefault) in keywordDataDefaults" :key="indexDefault" class="even:bg-[#EFF4FD]">
@@ -216,7 +216,7 @@
                         <svg v-else="isTopicSaved[index]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-[#FE4442]">
                           <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z" clip-rule="evenodd" />
                         </svg>
-                     </button> 
+                     </button>
                     </td>
                   </tr>
                 </tbody>
@@ -234,7 +234,7 @@
                       Overall
                     </th>
                     <th scope="col" class="rounded-r-lg px-3 py-3.5 text-right text-sm font-semibold">
-                      
+
                     </th>
                   </tr>
                 </thead>
@@ -272,7 +272,7 @@
                         <svg v-else="isTopicSaved[index]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-[#FE4442]">
                           <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z" clip-rule="evenodd" />
                         </svg>
-                     </button> 
+                     </button>
                     </td>
                   </tr>
                 </tbody>
@@ -524,7 +524,7 @@
 
         </div>
         <div class="flex-1 w-full px-6 py-8 bg-white md:w-auto bg-shadow rounded-xl md:col-span-2">
-          
+
           <div class="overflow-x-auto scrollbar">
             <div class="w-full min-w-max">
               <table class="table min-w-full border divide-gray-300 rounded-lg">
@@ -669,9 +669,9 @@ export default {
       savedTopic:false,
       DetailAnaylsis: {
         CTR_estimates: 0,
-        audience_age: '', 
-        audience_gender: '', 
-        top_countries: '', 
+        audience_age: '',
+        audience_gender: '',
+        top_countries: '',
         difficulty: 0,
         estimated_adsense_earning: 0,
         monthly_search_volume: 0
@@ -723,12 +723,9 @@ export default {
           estimated_adsense_earning: responseData.estimated_adsense_earning,
           monthly_search_volume: responseData.monthly_search_volume,
         };
-        console.log(responseData);
       } catch (error) {
         this.showLoader = false;
-        console.error("Error:", error);
-        this.showErrorToast(error);
-        apiErrors.value.push(error.response.data.message);
+        // apiErrors.value.push(error.response.data.message);
       }
       setTimeout(() => {
         apiErrors.value = [];

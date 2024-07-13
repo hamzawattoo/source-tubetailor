@@ -138,6 +138,7 @@
 <script>
   import MainLayout from "@/layouts/MainLayout.vue";
   import TableLayout from "@/layouts/TableLayout.vue";
+  import useToastHook from "../hooks/ToastMessage";
 
   import {ref, computed} from "vue";
   import {getRequestApi, putRequest} from "../helper/api";
@@ -177,15 +178,17 @@
           }
       },
       async fetchPlan() {
-          try {
-              const response = await getRequestApi('plan');
-              this.planData = response;
-              if (this.planData?.current_plan) {
-                  const planResponse = await getRequestApi(`/plan/${this.planData?.current_plan}`);
-                  this.purchasePlan = planResponse.plan;
+          if(this.user.subscribed) {
+              try {
+                  const response = await getRequestApi('plan');
+                  this.planData = response;
+                  if (this.planData?.current_plan) {
+                      const planResponse = await getRequestApi(`/plan/${this.planData?.current_plan}`);
+                      this.purchasePlan = planResponse.plan;
+                  }
+              } catch (error) {
+                  this.showErrorToast('Error fetching plan:', error);
               }
-          } catch (error) {
-              this.showErrorToast('Error fetching plan:', error);
           }
       },
       async cancelPlan() {
@@ -224,11 +227,11 @@
                   payload.lastname = this.user.lastname;
               }
               if (Object.keys(payload).length === 0) {
-                  alert('Please provide at least one parameter.');
+                  this.showSuccessToast("Please Fill all fields.");
                   return;
               }
               const response = await putRequest('/profile', payload);
-              alert('Profile updated successfully');
+              this.showSuccessToast("Profile Updated Successfully");
           } catch (error) {
               console.error('Error updating profile:', error);
           }
