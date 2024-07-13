@@ -43,8 +43,8 @@
               </ul>
               <div class="nav-right flex items-center gap-4">
                 <a v-if="!isAuthenticated" href="javascript:;" class="nav-btn" @click="login">Sign In</a>
-                <a href="javascript:;" class="nav-btn" @click="profile">Profile</a>
-                <a v-if="isAuthenticated" href="javascript:;" class="nav-btn" @click="logout">Logout</a>
+                <router-link to="/account-Settings" v-if="isAuthenticated"  class="nav-btn" @click="profile">Profile</router-link>
+                <a v-if="isAuthenticated" href="javascript:;" class="nav-btn" @click="signout">Logout</a>
               </div>
             </div>
           </nav>
@@ -555,9 +555,13 @@
                     </div>
                   </li>
                 </ul>
-
               <div class="action text-left">
-                <router-link :to="'/plan/'+plan.slug"
+                <router-link :to="'/plan/'+plan.slug" v-if="user"
+                ><span class="pix-btn btn-outline-two"
+                >Get Started</span
+                ></router-link
+                >
+                <router-link @click="login" v-else
                 ><span class="pix-btn btn-outline-two"
                 >Get Started</span
                 ></router-link
@@ -849,7 +853,11 @@ import proPlans from "../helper/pro.json";
 import useToastHook from "../hooks/ToastMessage";
 const { showSuccessToast, showErrorToast } = useToastHook();
 import { ref } from "vue";
+import axios from 'axios';
+import {getRequestApi,getRequestApiWithoutAuth, logout} from "../helper/api";
+
 const isPlaying = ref(false);
+const isAuthenticated = ref(false);
 const togglePlay = () => {
   const video = this.$ref.videoPlayer;
   const videoEl = document.getElementById("videoEl");
@@ -860,20 +868,20 @@ const togglePlay = () => {
   }
   isPlaying.value = !isPlaying.value;
 };
-const isAuthenticated = localStorage.getItem('token');
+isAuthenticated.value = localStorage.getItem('token');
 const api_baseURL = 'https://backend.tubetailor.ai/api/';
-import axios from 'axios';
-import {getRequestApi} from "../helper/api";
+
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = api_baseURL;
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
-// When returned after login, set token in localstorage and also remove token param from URL (Frontend developer can modify it, if developer has better approach)
 const urlParams = new URLSearchParams(window.location.search);
+
 if (urlParams.has('token')) {
   localStorage.setItem('token', urlParams.get('token'));
   urlParams.delete('token'); // Remove token from URL
   const newUrl = `${window.location.pathname}?${urlParams.toString()}${window.location.hash}`;
   history.replaceState(null, '', newUrl); // Update URL without reloading
+  isAuthenticated.value = localStorage.getItem('token');
 }
 function login() {
   window.location.href = `${api_baseURL}login`;
@@ -883,18 +891,10 @@ async function profile() {
   let { data } = await axios.get('profile');
   user.value = data;
 }
-async function logout() {
-  try {
-    const marketingResponse = await postRequest("logout");
-      localStorage.removeItem("token");
-      localStorage.removeItem("loglevel");
-      window.location.href = "/";
-  } catch (error) {
-    localStorage.removeItem("token");
-    localStorage.removeItem("loglevel");
-    console.error("Error in YouTube marketing:", error);
-    showErrorToast(error.response?.data?.message || "An error occurred during YouTube marketing");
-  }
+async function signout() {
+  await logout()
+  isAuthenticated.value =false
+  window.location.href = "/";
 }
 const plans = ref();
 const planDescription = [
@@ -905,16 +905,8 @@ const planDescription = [
 getPlans()
 async function getPlans() {
   try {
-    plans.value = await getRequestApi("plans");
-    console.log(plans)
-    //   localStorage.removeItem("token");
-    //   localStorage.removeItem("loglevel");
-      // window.location.href = "/";
+    plans.value = await getRequestApiWithoutAuth("plans");
   } catch (error) {
-    // localStorage.removeItem("token");
-    // localStorage.removeItem("loglevel");
-    // console.error("Error in YouTube marketing:", error);
-    // showErrorToast(error.response?.data?.message || "An error occurred during YouTube marketing");
   }
 }
 

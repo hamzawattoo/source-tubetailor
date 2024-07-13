@@ -114,16 +114,15 @@
               <MenuButton class="-m-1.5 flex items-center p-1.5">
                 <span class="sr-only">Open user menu</span>
 
-                <img class="w-8 h-8 rounded-full bg-gray-50"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                <img class="w-8 h-8 rounded-full bg-gray-50" v-if="user"
+                  :src="user.avatar ?? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'"
                   alt="" />
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                   stroke="currentColor" class="w-4 h-4 ml-2 lg:hidden">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
                 <span class="hidden lg:flex lg:items-center">
-                  <span class="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">Raza Rizvi
-                  </span>
+                  <span class="ml-4 text-sm font-semibold leading-6 text-gray-900" v-if="user" aria-hidden="true">{{user.firstname}} {{user.lastname}}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-4 h-4 ml-2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -137,7 +136,11 @@
                 <MenuItems
                   class="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                   <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                  <router-link :to="item.href" :class="[
+                    <button @click="signout" v-if="item?.id == 'signout'" :class="[
+      active ? 'bg-gray-50' : '',
+      'block px-3 py-1 text-sm leading-6 text-gray-900',
+    ]">{{ item.name }}</button>
+                  <router-link v-else :to="item.href" :class="[
       active ? 'bg-gray-50' : '',
       'block px-3 py-1 text-sm leading-6 text-gray-900',
     ]">{{ item.name }}</router-link>
@@ -199,6 +202,8 @@ import Competitors from "@/svgs/competitors.vue";
 import OptSVG from "@/svgs/OptSVG.vue";
 import { useRouter } from "vue-router";
 import { useHeadline } from "../store/Headline";
+import { getUserDetail } from "../helper/api.js";
+import {logout} from "../helper/api";
 
 const store = useHeadline();
 const show = ref(false);
@@ -209,9 +214,9 @@ function showModal() {
 
 const router = useRouter();
 const currentRoute = ref(router.currentRoute.value.path);
+const user = ref(null);
 
 onMounted(() => {
-  console.log("====================================");
 
   const currentRoute0 = currentRoute.value;
   if (currentRoute0 === "/dashboard") {
@@ -234,11 +239,13 @@ onMounted(() => {
     store.setHeadline("Account Settings");
   }
 
-  console.log("====================================");
-
   router.afterEach((to, from) => {
     currentRoute.value = to.path;
   });
+
+  getUserDetail().then(data =>{
+    user.value=data
+  })
 });
 
 const navigation = [
@@ -286,15 +293,13 @@ const teams = [
 ];
 const userNavigation = [
   { name: "Your profile", href: "/account-Settings" },
-  { name: "Sign out", href: "#" },
+  { name: "Sign out", href: "#", id:"signout" },
   { name: "Admin panel", href: "adminDashboard" },
 ];
-
-onMounted(() => {
-  console.log("====================================");
-  console.log(currentRoute.value);
-  console.log("====================================");
-});
+async function signout() {
+  await logout()
+  window.location.href = "/";
+}
 
 const sidebarOpen = ref(false);
 </script>

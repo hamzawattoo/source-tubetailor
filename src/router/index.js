@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 import Home from "@/pages/Home.vue";
 import purchase from "@/pages/purchase.vue";
 import Marketing from "@/pages/Marketing.vue";
@@ -17,134 +17,143 @@ import AdminSettings from "@/pages/AdminPanel/AdminSettings.vue";
 import AdminTransaction from "@/pages/AdminPanel/AdminTransaction.vue";
 import AdminUsers from "@/pages/AdminPanel/AdminUsers.vue";
 import AdminMail from "@/pages/AdminPanel/AdminMail.vue";
+import {getUserDetail} from "../helper/api";
+
 const router = createRouter({
-  history: createWebHistory(),
-  routes: [
-    {
-      path: "/",
-      name: "landing",
-      component: Landing,
-    },
-    {
-      path: "/plan/:slug",
-      name: "purchase",
-      props: true,
-      component: purchase,
-    },
-    {
-      path: "/dashboard",
-      name: "home",
-      component: Home,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: "/Competitors",
-      name: "Competitors",
-      component: Marketing,
-      meta: { requiresAuth: true }
+    history: createWebHistory(),
+    routes: [
+        {
+            path: "/",
+            name: "landing",
+            component: Landing,
+        },
+        {
+            path: "/plan/:slug",
+            name: "purchase",
+            props: true,
+            component: purchase,
+        },
+        {
+            path: "/dashboard",
+            name: "home",
+            component: Home,
+            meta: {requiresAuth: true, isAdmin: false}
+        },
+        {
+            path: "/Competitors",
+            name: "Competitors",
+            component: Marketing,
+            meta: {requiresAuth: true, isAdmin: false}
 
-    },
-    {
-      path: "/content-generator",
-      name: "contentgenerator",
-      component: ContentGenerator,
-      meta: { requiresAuth: true }
+        },
+        {
+            path: "/content-generator",
+            name: "contentgenerator",
+            component: ContentGenerator,
+            meta: {requiresAuth: true, isAdmin: false}
 
-    },
-    {
-      path: "/community-tools",
-      name: "communitytools",
-      component: CommunityTools,
-      meta: { requiresAuth: true }
+        },
+        {
+            path: "/community-tools",
+            name: "communitytools",
+            component: CommunityTools,
+            meta: {requiresAuth: true, isAdmin: false}
 
-    },
-    {
-      path: "/competition",
-      name: "competition",
-      component: Competition,
-      meta: { requiresAuth: true }
+        },
+        {
+            path: "/competition",
+            name: "competition",
+            component: Competition,
+            meta: {requiresAuth: true, isAdmin: false}
 
-    },
-    {
-      path: "/pricing-plans",
-      name: "pricingplans",
-      component: PricingPlans,
-      meta: { requiresAuth: true }
+        },
+        {
+            path: "/pricing-plans",
+            name: "pricingplans",
+            component: PricingPlans,
+            meta: {requiresAuth: true, isAdmin: false}
 
-    },
-    {
-      path: "/keyword-research",
-      name: "keywordresearch",
-      component: KeywordResearch,
-      meta: { requiresAuth: true }
+        },
+        {
+            path: "/keyword-research",
+            name: "keywordresearch",
+            component: KeywordResearch,
+            meta: {requiresAuth: true, isAdmin: false}
 
-    },
-    {
-      path: "/optimization",
-      name: "optimization",
-      component: Optimzation,
-      meta: { requiresAuth: true }
+        },
+        {
+            path: "/optimization",
+            name: "optimization",
+            component: Optimzation,
+            meta: {requiresAuth: true, isAdmin: false}
 
-    },
-    {
-      path: "/history",
-      name: "history",
-      component: History,
-      meta: { requiresAuth: true }
+        },
+        {
+            path: "/history",
+            name: "history",
+            component: History,
+            meta: {requiresAuth: true, isAdmin: false}
 
-    },
-    {
-      path: "/account-Settings",
-      name: "accountsettings",
-      component: AccountSettings,
-      meta: { requiresAuth: true }
+        },
+        {
+            path: "/account-Settings",
+            name: "accountsettings",
+            component: AccountSettings,
+            meta: {requiresAuth: true, isAdmin: false}
 
-    },
-    {
-      path: "/Progress",
-      name: "pro",
-      component: Progress,
-      meta: { requiresAuth: true }
+        },
+        {
+            path: "/Progress",
+            name: "pro",
+            component: Progress,
+            meta: {requiresAuth: true, isAdmin: true}
 
-    },
-    {
-      path: "/Admindashboard",
-      name: "AdminDashboard",
-      component: AdminDashboard,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: "/Adminsettings",
-      name: "AdminSettings",
-      component: AdminSettings,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: "/Admintransaction",
-      name: "AdminTransaction",
-      component: AdminTransaction,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: "/Adminusers",
-      name: "AdminUsers",
-      component: AdminUsers,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: "/Adminmail",
-      name: "AdminMail",
-      component: AdminMail,
-      meta: { requiresAuth: true }
-    },
-  ],
+        },
+        {
+            path: "/Admindashboard",
+            name: "AdminDashboard",
+            component: AdminDashboard,
+            meta: {requiresAuth: true, isAdmin: true}
+        },
+        {
+            path: "/Adminsettings",
+            name: "AdminSettings",
+            component: AdminSettings,
+            meta: {requiresAuth: true, isAdmin: true}
+        },
+        {
+            path: "/Admintransaction",
+            name: "AdminTransaction",
+            component: AdminTransaction,
+            meta: {requiresAuth: true, isAdmin: true}
+        },
+        {
+            path: "/Adminusers",
+            name: "AdminUsers",
+            component: AdminUsers,
+            meta: {requiresAuth: true, isAdmin: true}
+        },
+        {
+            path: "/Adminmail",
+            name: "AdminMail",
+            component: AdminMail,
+            meta: {requiresAuth: true, isAdmin: true}
+        },
+    ],
 });
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('token');
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/');
-  } else {
-    next();
-  }
+    const isAuthenticated = localStorage.getItem('token');
+    if (to.meta.requiresAuth && !isAuthenticated) {
+        next('/');
+    } else {
+      getUserDetail().then(data => {
+        console.log(data.is_admin)
+        if (to.meta.isAdmin && data.is_admin == 0 ) {
+          next('/');
+        } else {
+          next();
+        }
+      })
+    }
 });
 export default router;
