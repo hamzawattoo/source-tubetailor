@@ -439,7 +439,6 @@ async function youtubeOptimization() {
       },
     });
 
-
     allresults.value = optimizationResponse.results;
     score.value = optimizationResponse.score_out_of_10;
     result1.value = optimizationResponse.results[0];
