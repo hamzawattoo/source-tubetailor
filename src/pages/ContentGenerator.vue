@@ -152,7 +152,7 @@
           </div>
         </div>
         <div class="text-center md:col-span-2">
-                <button class="bg-red-600 px-3  py-2 rounded-md text-white outline outline-offset-2 outline-2">Export to Optimization</button>
+                <button @click="exportToOptimization"  class="bg-red-600 px-3  py-2 rounded-md text-white outline outline-offset-2 outline-2">Export to Optimization</button>
               </div>
         <!-- Second Column -->
         <div class="col-span-2">
@@ -1190,6 +1190,7 @@ import AudioPlayer from "vue-audio";
 import GlobalAlert from "@/components/Alert.vue";
 import { ExclamationTriangleIcon } from "@heroicons/vue/20/solid";
 import useToastHook from "../hooks/ToastMessage";
+import { useMainStore } from '@/store/index';
 
 const apiErrors = ref([]);
 const onSuccess = () => {
@@ -1223,6 +1224,7 @@ export default {
       shouldRenderAudio: false,
       showLoader: false,
       selectedVoice: null,
+      storeContent: useMainStore(),
       apiResponse: {
         script: "",
         narration_script: "",
@@ -1244,6 +1246,11 @@ export default {
     const { showSuccessToast, showErrorToast } = useToastHook();
     this.showSuccessToast = showSuccessToast;
     this.showErrorToast = showErrorToast;
+    this.apiResponse.script = this.storeContent.scriptContentGenerator
+    this.apiResponse.narration_script = this.storeContent.narration_scriptContentGenerator
+    this.apiResponse.description = this.storeContent.descriptionContentGenerator
+    this.apiResponse.tags = this.storeContent.tagsContentGenerator
+    this.textValue = this.storeContent.textValueContentGenerator
   },
   computed: {
     groupedVoices() {
@@ -1315,6 +1322,13 @@ export default {
         });
         this.showLoader = false;
         this.apiResponse = response;
+        this.storeContent.$patch((state) => {
+          state.scriptContentGenerator = this.apiResponse?.script
+          state.narration_scriptContentGenerator = this.apiResponse?.narration_script
+          state.descriptionContentGenerator = this.apiResponse?.description
+          state.tagsContentGenerator = this.apiResponse?.tags
+          state.textValueContentGenerator = this.textValue
+        });
       } catch (error) {
         this.showLoader = false;
       }
@@ -1328,6 +1342,13 @@ export default {
       if (this.voiceOverResult) {
         this.$refs.audioPlayer.play();
       }
+    },
+    async exportToOptimization(){
+      this.storeContent.$patch((state) => {
+        if(this.apiResponse) {
+          this.$router.push({ path: '/optimization' });
+        }
+      })
     },
     async voiceover() {
       console.log(this.selected.id);
@@ -1368,7 +1389,7 @@ export default {
     },
   },
   mounted() {
-    this.textValue = localStorage.getItem("topic");
+    this.textValue = localStorage.getItem("topic") ?? this.textValue;
     this.fetchVoiceData();
   },
 };

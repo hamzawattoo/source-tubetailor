@@ -355,6 +355,7 @@ import { InformationCircleIcon } from "@heroicons/vue/24/outline";
 import MainLayout from "../layouts/MainLayout.vue";
 import { ref } from "vue";
 import { useTab } from "@/store/counter";
+import { useMainStore } from "@/store/index";
 import Tabs from "@/components/Tabs.vue";
 import TableLayout from "../layouts/TableLayout.vue";
 import RedditContent from "@/components/RedditContent.vue";
@@ -366,11 +367,12 @@ import CircleProgress from "@/components/CircleProgress.vue";
 import useToastHook from "../hooks/ToastMessage";
 import { postRequest } from "../helper/api.js";
 import Modal from "@/components/Loader.vue";
+const storeContent = useMainStore();
 
 const { showSuccessToast, showErrorToast } = useToastHook();
 const currentTab = ref(1);
 const currentTabMarketing = ref(1);
-const textValue = ref("");
+const textValue = ref(storeContent.scriptContentGenerator);
 const apiResponse = ref(null);
 const textValueValidationMessage = ref("");
 const showLoader = ref(false);
@@ -428,13 +430,13 @@ async function youtubeOptimization() {
       script: textValue.value, link: youtubeLink.value, file: selectedFile,
     });
 
-    console.log(optimizationResponse.results, 'data');
     allresults.value = optimizationResponse.results;
     score.value = optimizationResponse.score_out_of_10;
     result1.value = optimizationResponse.results[0];
     result2.value = optimizationResponse.results[1];
     result3.value = optimizationResponse.results[2];
     tags.value = optimizationResponse.results.tags;
+
     recommendedTitle1.value = result1.value.title
     recommendedTitle2.value = result2.value.title
     recommendedTitle3.value = result3.value.title
@@ -454,8 +456,6 @@ async function youtubeOptimization() {
     }
     completedRequests++;
   } catch (error) {
-    console.error("Error in YouTube optimization:", error);
-    showErrorToast(error.response?.data?.message || "An error occurred during YouTube optimization");
     completedRequests++;
   }
   try {
@@ -466,8 +466,6 @@ async function youtubeOptimization() {
     // showLoader.value = false;
     completedRequests++;
   } catch (error) {
-    console.error("Error in YouTube marketing:", error);
-    showErrorToast(error.response?.data?.message || "An error occurred during YouTube marketing");
     completedRequests++;
   }
 
@@ -479,5 +477,32 @@ async function youtubeOptimization() {
     apiErrors.value = [];
   }, 2000);
 }
+onMounted(() => {
+  if(storeContent.YoutubeoptimizationResponse) {
+    allresults.value = storeContent.YoutubeoptimizationResponse.results;
+    score.value = storeContent.YoutubeoptimizationResponse.score_out_of_10;
+    result1.value = storeContent.YoutubeoptimizationResponse.results[0];
+    result2.value = storeContent.YoutubeoptimizationResponse.results[1];
+    result3.value = storeContent.YoutubeoptimizationResponse.results[2];
+    tags.value = storeContent.YoutubeoptimizationResponse.results.tags;
 
+    recommendedTitle1.value = result1.value.title
+    recommendedTitle2.value = result2.value.title
+    recommendedTitle3.value = result3.value.title
+    recommendedDescription1.value = result1.value.description
+    recommendedDescription2.value = result2.value.description
+    recommendedDescription3.value = result3.value.description
+    recommendedIdea1.value = result1.value.thumbnail_idea
+    recommendedIdea2.value = result2.value.thumbnail_idea
+    recommendedIdea3.value = result3.value.thumbnail_idea
+    // showLoader.value = false;
+
+    // return;
+    if (storeContent.YoutubeoptimizationResponse.message) {
+      textValueValidationMessage.value = storeContent.YoutubeoptimizationResponse.message;
+    } else {
+      apiResponse.value = storeContent.YoutubeoptimizationResponse;
+    }
+  }
+})
 </script>

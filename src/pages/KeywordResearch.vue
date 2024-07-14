@@ -658,6 +658,8 @@ function changeTabMarketing(tab) {
 import { getRequestApi } from '../helper/api.js';
 import useToastHook from "../hooks/ToastMessage";
 const apiErrors = ref([]);
+import { useMainStore } from '@/store/index';
+
 export default {
   data() {
     return {
@@ -667,6 +669,7 @@ export default {
       similar_keywords: [],
       isTopicSaved: [],
       savedTopic:false,
+      storeKeyword:useMainStore(),
       DetailAnaylsis: {
         CTR_estimates: 0,
         audience_age: '',
@@ -682,6 +685,9 @@ export default {
     const { showSuccessToast, showErrorToast } = useToastHook();
     this.showSuccessToast = showSuccessToast;
     this.showErrorToast = showErrorToast;
+    this.similar_keywords = this.storeKeyword.similar_keywords;
+    this.DetailAnaylsis = this.storeKeyword.DetailAnaylsis
+    this.textValue = this.storeKeyword.textValueKeyword ?? ""
   },
   computed: {
     audienceDetail() {
@@ -723,6 +729,11 @@ export default {
           estimated_adsense_earning: responseData.estimated_adsense_earning,
           monthly_search_volume: responseData.monthly_search_volume,
         };
+        this.storeKeyword.$patch((state) => {
+          state.DetailAnaylsis = this.DetailAnaylsis
+          state.similar_keywords = responseData.similar_keywords
+          state.textValueKeyword = this.textValue
+        });
       } catch (error) {
         this.showLoader = false;
         // apiErrors.value.push(error.response.data.message);
