@@ -30,7 +30,7 @@
                 <li class="menu-item-has-children">
                   <router-link
                     to="dashboard"
-                    class="text-sm relative z-50 py-[10px] text-[#111C52]">How it works</router-link>
+                    class="text-sm relative z-50 py-[10px] text-[#111C52]">Dashboard</router-link>
                 </li>
                 <li><a href="about.html">About</a></li>
                 <li class="menu-item-has-children">
@@ -43,7 +43,7 @@
               </ul>
               <div class="nav-right flex items-center gap-4">
                 <a v-if="!isAuthenticated" href="javascript:;" class="nav-btn" @click="login">Sign In</a>
-                <router-link to="/account-Settings" v-if="isAuthenticated"  class="nav-btn" @click="profile">Profile</router-link>
+                <router-link to="/account-Settings" v-if="isAuthenticated"  class="nav-btn !hidden" @click="profile">Profile</router-link>
                 <a v-if="isAuthenticated" href="javascript:;" class="nav-btn" @click="signout">Logout</a>
               </div>
             </div>

@@ -151,7 +151,7 @@
                     <td class="py-4 pl-4 pr-3 text-sm font-medium whitespace-nowrap sm:pl-3">
                       <label class="flex flex-row gap-4 items-center [&>.checkbox]:hover:bg-neutral-100">
                         <CheckboxRoot v-model="checkboxOne"
-                          class="flex h-[16px] border w-[16px] items-center justify-center rounded bg-white outline-none">
+                          class="h-[16px] border w-[16px] items-center justify-center rounded bg-white outline-none hidden">
                           <CheckboxIndicator
                             class="flex items-center justify-center w-full h-full text-white rounded bg-insta">
                             <svg width="15" height="15" viewBox="0 0 15 15" fill="none"
@@ -187,7 +187,7 @@
                     <td class="py-4 pl-4 pr-3 text-sm font-medium whitespace-nowrap sm:pl-3">
                       <label class="flex flex-row gap-4 items-center [&>.checkbox]:hover:bg-neutral-100">
                         <CheckboxRoot v-model="checkboxOne"
-                          class="flex h-[16px] border w-[16px] items-center justify-center rounded bg-white outline-none">
+                          class="flex h-[16px] border w-[16px] items-center justify-center rounded bg-white outline-none hidden">
                           <CheckboxIndicator
                             class="flex items-center justify-center w-full h-full text-white rounded bg-insta">
                             <svg width="15" height="15" viewBox="0 0 15 15" fill="none"

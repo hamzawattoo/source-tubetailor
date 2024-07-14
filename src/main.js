@@ -9,12 +9,11 @@ import GlobalAlert from './components/Alert.vue';
 
 const pinia = createPinia();
 
-createApp(App)
-  .use(router)
+const app = createApp(App);
+
+app.use(router)
   .use(VueApexCharts)
   .use(pinia)
   .use(VueClipboard)
+  .component('global-alert', GlobalAlert)
   .mount("#app");
-  app.component('global-alert', GlobalAlert);
-
-  app.mount('#app');

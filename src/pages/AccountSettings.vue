@@ -16,7 +16,7 @@
           <div class="flex flex-col lg:flex-row items-start w-full justify-between">
               <div class="lg:border-r-2 border-gray-300 lg:pr-4 xl:pr-12 max-w-full lg:max-w-[50%] w-full py-5">
                   <form class="space-y-5" @submit.prevent="updateProfile">
-                      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                      <div class="flex flex-col items-start justify-between gap-4">
                           <label class="text-lg font-semibold" for="email">Email:</label>
                           <input
                               id="email"
@@ -26,7 +26,7 @@
                               disabled
                           />
                       </div>
-                      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                      <div class="flex flex-col items-start justify-between gap-4">
                           <label class="text-lg font-semibold" for="firstname">First name:</label>
                           <input
                               id="firstname"
@@ -35,7 +35,7 @@
                               type="text"
                           />
                       </div>
-                      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                      <div class="flex flex-col items-start justify-between gap-4">
                           <label class="text-lg font-semibold" for="lastname">Last name:</label>
                           <input
                               id="lastname"
@@ -49,7 +49,8 @@
                               class="bg-youtube hover:bg-opacity-75 px-12 text-white font-bold py-3 rounded-full"
                               type="submit"
                           >
-                              Save
+                              <span v-if="!loading">Save</span>
+                              <span v-if="loading">Saveing...</span>
                           </button>
                       </div>
                   </form>
@@ -139,7 +140,6 @@
   import MainLayout from "@/layouts/MainLayout.vue";
   import TableLayout from "@/layouts/TableLayout.vue";
   import useToastHook from "../hooks/ToastMessage";
-
   import {ref, computed} from "vue";
   import {getRequestApi, putRequest} from "../helper/api";
 
@@ -233,6 +233,7 @@
               const response = await putRequest('/profile', payload);
               this.showSuccessToast("Profile Updated Successfully");
           } catch (error) {
+            this.loading = false;
               console.error('Error updating profile:', error);
           }
       }

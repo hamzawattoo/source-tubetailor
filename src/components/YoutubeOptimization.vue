@@ -244,7 +244,7 @@
                 </label>
 
                 <div class="flex flex-wrap gap-2">
-                  <span v-if="tags?.tag" v-for="(tag, tagIndex) in tags" :key="tagIndex"
+                  <span v-if="tags.length != 0" v-for="(tag, tagIndex) in tags" :key="tagIndex"
                     class="px-3 py-1 bg-[#EFF4FD] text-gray-500 rounded-full text-[12px] whitespace-nowrap flex">{{ tag }}</span>
                     <span v-else v-for="person in people" :key="person.email"
                     class="px-3 py-1 bg-[#EFF4FD] text-gray-500 rounded-full text-[12px] whitespace-nowrap flex">{{ person.data }}</span>
@@ -426,9 +426,19 @@ async function youtubeOptimization() {
   let completedRequests = 0;
 
   try {
-    const optimizationResponse = await postRequest("youtube/optimization", {
-      script: textValue.value, link: youtubeLink.value, file: selectedFile,
+    const formData = new FormData();
+    formData.append("script", textValue.value);
+    formData.append("link", youtubeLink.value ? String(youtubeLink.value) : "");
+    if (selectedFile.value) {
+      formData.append("file", selectedFile.value);
+    }
+
+    const optimizationResponse = await postRequest("youtube/optimization", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
+
 
     allresults.value = optimizationResponse.results;
     score.value = optimizationResponse.score_out_of_10;
@@ -436,7 +446,7 @@ async function youtubeOptimization() {
     result2.value = optimizationResponse.results[1];
     result3.value = optimizationResponse.results[2];
     tags.value = optimizationResponse.results.tags;
-
+    apiResponse.value = optimizationResponse.subreddits;
     recommendedTitle1.value = result1.value.title
     recommendedTitle2.value = result2.value.title
     recommendedTitle3.value = result3.value.title
@@ -458,18 +468,8 @@ async function youtubeOptimization() {
   } catch (error) {
     completedRequests++;
   }
-  try {
-    const marketingResponse = await postRequest("youtube/marketing", {
-      script: textValue.value,
-    });
-    apiResponse.value = marketingResponse;
-    // showLoader.value = false;
-    completedRequests++;
-  } catch (error) {
-    completedRequests++;
-  }
 
-  if (completedRequests === 2) {
+  if (completedRequests === 1) {
     showLoader.value = false;
   }
 

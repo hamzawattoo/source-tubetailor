@@ -17,7 +17,7 @@
             </div>
           </fieldset>
         </div>
-        <div class="max-w-[200px] w-full self-end">
+        <div class="max-w-[200px] w-full self-end hidden">
           <div class="slider flex items-center justify-between bg-white w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-red-500 sm:text-sm sm:leading-6 text-center">
             <button @click="scrollLeft">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-500">
@@ -74,7 +74,7 @@
                     </button>
                   </div>
                 </td>
-                <td class="px-4 py-2 text-end">
+                <td class="px-4 py-2 text-end hidden">
                   <button @click="saveCompetitor(index)" class="text-left text-[10px] underline whitespace-nowrap font-medium focus:outline-none">
                     <svg v-if="isSaveCompetitor[index]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />

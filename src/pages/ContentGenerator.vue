@@ -1378,7 +1378,7 @@ export default {
 
     //////////////////////COPY TEXT////////////////////////
     copyText(textToCopy) {
-      showSuccessToast("Copied");
+      this.showSuccessToast("Copied");
       clipboardCopy(textToCopy)
         .then(() => {})
         .catch((err) => {});

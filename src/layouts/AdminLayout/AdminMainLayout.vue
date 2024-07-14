@@ -25,9 +25,9 @@
               <!-- Sidebar component, swap this element with another sidebar if you like -->
               <div class="flex flex-col px-6 pb-4 overflow-y-auto bg-white grow gap-y-5">
 
-                <div class="flex items-center h-16 shrink-0">
+                <router-link to="/" class="flex items-center h-16 shrink-0">
                   <img class="w-auto h-12" :src="Logo" alt="Your Company" />
-                </div>
+                </router-link>
                 <nav class="flex flex-col flex-1">
                   <ul role="list" class="flex flex-col flex-1 gap-y-7">
                     <li>
@@ -67,9 +67,9 @@
       <!-- Sidebar component, swap this element with another sidebar if you like -->
       <div class="example flex flex-col px-6 py-16 pb-4 overflow-y-auto bg-white border-r border-gray-200 grow gap-y-5">
 
-        <div class="flex items-center h-16 shrink-0">
-          <img class="w-auto h-16" src="" alt="Your Company" />
-        </div>
+        <router-link to="/" class="flex items-center h-16 shrink-0">
+          <img class="w-auto h-16" :src="Logo" alt="Your Company" />
+        </router-link>
 
         <nav class="flex flex-col flex-1">
 
