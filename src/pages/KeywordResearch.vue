@@ -1,6 +1,7 @@
 <template>
   <MainLayout>
     <!-- youtube -->
+    <isSubscribedAlert class="mb-4" /> 
     <div v-if="apiErrors.length > 0" class="rounded-md bg-red-50 p-4 sticky top-0 z-[9999]">
       <div class="flex">
         <div class="flex-shrink-0">

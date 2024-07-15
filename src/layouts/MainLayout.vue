@@ -159,6 +159,7 @@
 
       <main class="w-full min-h-screen pb-10">
         <div class="px-4 sm:px-6 lg:px-8">
+          <isSubscribedAlert class="mb-4" /> 
           <slot />
         </div>
       </main>
@@ -172,6 +173,8 @@ import smallLogo from "@/assets/smallLogo.png";
 import Modal from "@/components/Modal.vue";
 import { ref, onMounted } from "vue";
 import Tabs from "@/components/Tabs.vue";
+import isSubscribedAlert from "@/components/IsSubscribed.vue";
+
 import {
   Dialog,
   DialogPanel,
@@ -298,6 +301,7 @@ const userNavigation = [
 ];
 async function signout() {
   await logout()
+  localStorage.removeItem('isSubscribed');
   window.location.href = "/";
 }
 

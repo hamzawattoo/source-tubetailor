@@ -112,9 +112,11 @@ export async function logout() {
     const marketingResponse = await postRequest("logout");
     localStorage.removeItem("token");
     localStorage.removeItem("loglevel");
+    localStorage.removeItem('isSubscribed');
   } catch (error) {
     localStorage.removeItem("token");
     localStorage.removeItem("loglevel");
+    localStorage.removeItem('isSubscribed');
     console.error("Error in YouTube marketing:", error);
     showErrorToast(error.response?.data?.message || "An error occurred during YouTube marketing");
   }

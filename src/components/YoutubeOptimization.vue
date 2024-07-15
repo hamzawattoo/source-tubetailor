@@ -22,7 +22,7 @@
           class="w-full h-50 px-4 py-4 bg-white outline-none rounded-xl bg-shadow border border-gray-200">
         </textarea>
         </div>
-        <!-- {{ youtubeLink }} <pre>{{ selectedFile?.name }}</pre> -->
+        <!-- /////// -->
         <div class="w-full h-50 px-4 py-4 bg-white outline-none rounded-xl bg-shadow border md:col-span-1">
           <div class="flex flex-col items-baseline gap-2 justify-between">
             <p class="font-medium text-gray-800">Upload Text</p>
@@ -367,8 +367,9 @@ import CircleProgress from "@/components/CircleProgress.vue";
 import useToastHook from "../hooks/ToastMessage";
 import { postRequest } from "../helper/api.js";
 import Modal from "@/components/Loader.vue";
-const storeContent = useMainStore();
+import isSubscribedAlert from "@/components/IsSubscribed.vue";
 
+const storeContent = useMainStore();
 const { showSuccessToast, showErrorToast } = useToastHook();
 const currentTab = ref(1);
 const currentTabMarketing = ref(1);

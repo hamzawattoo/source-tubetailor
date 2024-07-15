@@ -305,6 +305,7 @@ onMounted(() => {
 
 async function signout() {
   await logout()
+  localStorage.removeItem('isSubscribed');
   window.location.href = "/";
 }
 

@@ -328,54 +328,8 @@
           <span class="pricing-tab-switcher"></span>
           <span class="annual_tab_title tab-btn"> Annual </span>
         </nav>
-        <div class="row advanced-pricing-table" v-if="plans?.plans">
-          <div class="col-lg-4" v-for="(plan,index) in plans.plans" :key="index">
-            <div
-              class="pricing-table style-two price-two wow pixFadeLeft"
-              data-wow-delay="0.5s"
-            >
-              <div class="pricing-header pricing-amount">
-                <div class="annual_price">
-                  <h2 class="price">$0.00</h2>
-                </div>
-                <div class="monthly_price">
-                  <h2 class="price">${{parseFloat(plan.price).toFixed(2)}}</h2>
-                </div>
-                <h3 class="price-title">{{plan.name}}</h3>
-                <p>Free</p>
-              </div>
-              <!-- /.pricing-header -->
-                <ul class="price-feture !list-disc">
-                  <li v-for="(basicPlan,index1) in planDescription[index]" :key="index1">
-                    <div class="flex items-start">
-                      <span class="max-w-[50%] text-sm"
-                        >{{basicPlan.title}}
-                      </span
-                      >
-                      <span :class="basicPlan.customClass"
-                              class="max-w-[50%] ml-auto whitespace-wrap text-right text-xs"
-                        >{{basicPlan.description}}</span
-                      >
-                    </div>
-                  </li>
-                </ul>
-              <div class="action text-left">
-                <router-link :to="'/plan/'+plan.slug" v-if="isAuthenticated"
-                ><span class="pix-btn btn-outline-two"
-                >Get Started</span
-                ></router-link
-                >
-                <button @click="login" v-else
-                ><span class="pix-btn btn-outline-two"
-                >Get Started</span
-                ></button>
-              </div>
-            </div>
-            <!-- /.pricing-table -->
-          </div>
-          <!-- /.col-lg-4 -->
-        </div>
         <!-- /.advanced-pricing-table -->
+        <PricingCard />
       </div>
       <!-- /.container -->
     </section>
@@ -632,6 +586,7 @@ import { postRequest } from "../helper/api.js";
 import basicPlans from "../helper/basic.json";
 import proPlans from "../helper/pro.json";
 import useToastHook from "../hooks/ToastMessage";
+import PricingCard from "../components/PricingCard.vue";
 const { showSuccessToast, showErrorToast } = useToastHook();
 import { ref } from "vue";
 import axios from 'axios';
@@ -674,7 +629,8 @@ async function profile() {
 }
 async function signout() {
   await logout()
-  isAuthenticated.value =false
+  isAuthenticated.value =false;
+  localStorage.removeItem('isSubscribed');
   window.location.href = "/";
 }
 const plans = ref();
