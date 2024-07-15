@@ -428,7 +428,7 @@ async function youtubeOptimization() {
   try {
     const formData = new FormData();
     formData.append("script", textValue.value);
-    formData.append("link", youtubeLink.value ? String(youtubeLink.value) : "");
+    formData.append("link", youtubeLink.value ? String(youtubeLink.value) : null);
     if (selectedFile.value) {
       formData.append("file", selectedFile.value);
     }
@@ -456,7 +456,11 @@ async function youtubeOptimization() {
     recommendedIdea2.value = result2.value.thumbnail_idea
     recommendedIdea3.value = result3.value.thumbnail_idea
     // showLoader.value = false;
-
+    storeContent.$patch((state) => {
+      state.YoutubeoptimizationResponse = optimizationResponse
+      state.scriptContentGenerator = textValue.value
+      state.youtubeLink = youtubeLink.value
+      })
     // return;
     if (optimizationResponse.message) {
       textValueValidationMessage.value = optimizationResponse.message;
@@ -495,6 +499,7 @@ onMounted(() => {
     recommendedIdea2.value = result2.value.thumbnail_idea
     recommendedIdea3.value = result3.value.thumbnail_idea
     // showLoader.value = false;
+    youtubeLink.value = storeContent.youtubeLink
 
     // return;
     if (storeContent.YoutubeoptimizationResponse.message) {

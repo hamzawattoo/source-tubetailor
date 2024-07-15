@@ -10,6 +10,7 @@ export const useMainStore = defineStore('index', {
         DetailAnaylsis:[],
         similar_keywords: "",
         textValueKeyword: "",
-        YoutubeoptimizationResponse: ""
+        YoutubeoptimizationResponse: "",
+        youtubeLink:""
     }),
 })
