@@ -12,7 +12,7 @@ import Progress from "@/pages/Progress.vue";
 import Competition from "@/pages/Competition.vue";
 import KeywordResearch from "@/pages/KeywordResearch.vue";
 import Optimization from "@/pages/Optimization.vue";
-import Landing from "@/pages/LandingPage.vue";
+import Landing from "@/pages/landingPage.vue";
 import AdminDashboard from "@/pages/AdminPanel/AdminDashboard.vue";
 import AdminSettings from "@/pages/AdminPanel/AdminSettings.vue";
 import AdminTransaction from "@/pages/AdminPanel/AdminTransaction.vue";
