@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { ref } from "vue"; // Import ref from Vue
 import Home from "@/pages/Home.vue";
-import Purchase from "@/pages/Purchase.vue";
+import Purchase from "@/pages/purchase.vue";
 import Marketing from "@/pages/Marketing.vue";
 import History from "@/pages/History.vue";
 import ContentGenerator from "@/pages/ContentGenerator.vue";
