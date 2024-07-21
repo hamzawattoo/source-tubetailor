@@ -173,7 +173,7 @@ import smallLogo from "@/assets/smallLogo.png";
 import Modal from "@/components/Modal.vue";
 import { ref, onMounted } from "vue";
 import Tabs from "@/components/Tabs.vue";
-import isSubscribedAlert from "@/components/IsSubscribed.vue";
+import isSubscribedAlert from "@/components/isSubscribed.vue";
 
 import {
   Dialog,
