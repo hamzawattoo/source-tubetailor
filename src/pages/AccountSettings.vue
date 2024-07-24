@@ -46,7 +46,7 @@
               <div class="text-end">
                 <button class="bg-youtube hover:bg-opacity-75 px-12 text-white font-bold py-3 rounded-full" type="submit">
                   <span v-if="!loading">Save</span>
-                  <span v-if="loading">Saving...</span>
+                  <span v-if="loading" class="flex items-center gap-2">Saving <div class="w-4 h-4 border-2 border-white border-t-gray-300 border-r-gray-300 rounded-full animate-spin"></div></span>
                 </button>
               </div>
             </form>
@@ -130,11 +130,12 @@
   import TableLayout from "@/layouts/TableLayout.vue";
   import useToastHook from "../hooks/ToastMessage";
   import { getRequestApi, putRequest } from "../helper/api";
-  
+  import { getUserDetail } from "../helper/api.js";
+
   const { showSuccessToast, showErrorToast } = useToastHook();
-  
+  const loading = ref(false);
   const planData = ref(null);
-  const user = ref(null);
+  const user = ref({});
   const purchasePlan = ref(null);
   
   const profile = async () => {
@@ -192,6 +193,7 @@
   
   const updateProfile = async () => {
     try {
+      loading.value = true;
       const payload = {};
       if (user.value.firstname) {
         payload.firstname = user.value.firstname;
@@ -203,9 +205,18 @@
         showSuccessToast("Please Fill all fields.");
         return;
       }
-      await putRequest('/profile', payload);
+      await putRequest('/profile', payload);  
+        try {
+          const userDetail = await getUserDetail();
+          localStorage.setItem('user', JSON.stringify(userDetail));
+        } catch (error) {
+          console.error('Error fetching user:', error);
+        }
+        window.location.reload();
+        loading.value = false;
       showSuccessToast("Profile Updated Successfully");
     } catch (error) {
+      loading.value = false;
       console.error('Error updating profile:', error);
     }
   };

@@ -104,9 +104,12 @@ import { InformationCircleIcon } from "@heroicons/vue/24/outline";
 import { getRequestApi } from '../helper/api.js';
 
 export default {
+  components: {
+    InformationCircleIcon
+  },
   data() {
     return {
-      currentTab: 1,
+      currentTab: 1,  
       tabs: [1, 2, 3],
       projects: '',
       isLoading: false,

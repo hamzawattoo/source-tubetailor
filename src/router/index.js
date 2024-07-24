@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { ref } from "vue"; // Import ref from Vue
 import Home from "@/pages/Home.vue";
+import Mainlayout from "@/layouts/Mainlayout.vue";
 import Purchase from "@/pages/purchase.vue";
 import Marketing from "@/pages/Marketing.vue";
 import History from "@/pages/History.vue";
@@ -18,38 +18,7 @@ import AdminSettings from "@/pages/AdminPanel/AdminSettings.vue";
 import AdminTransaction from "@/pages/AdminPanel/AdminTransaction.vue";
 import AdminUsers from "@/pages/AdminPanel/AdminUsers.vue";
 import AdminMail from "@/pages/AdminPanel/AdminMail.vue";
-import { getUserDetail, getRequestApi } from "../helper/api";
-
-const user = ref(null); // Define user as a reactive variable
-
-const profile = async () => {
-  try {
-    const userData = await getRequestApi('profile');
-    user.value = userData;
-    if (user.value?.subscribed) {
-      localStorage.setItem('isSubscribed', JSON.stringify(user.value.subscribed));
-    }
-    return user.value; // Return user data
-  } catch (error) {
-    console.error('Error fetching profile:', error);
-    return null;
-  }
-};
-
-// Function to check subscription status and update local storage
-const checkSubscriptionStatus = async () => {
-  try {
-    const userData = await profile();
-    if (!userData?.subscribed) {
-      localStorage.removeItem('isSubscribed');
-    }
-  } catch (error) {
-    console.error('Error checking subscription status:', error);
-  }
-};
-
-// Call checkSubscriptionStatus every 24 hours
-setInterval(checkSubscriptionStatus, 24 * 60 * 60 * 1000);
+import { getUserDetail } from "../helper/api";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -72,31 +41,43 @@ const router = createRouter({
     { path: "/admintransaction", name: "admintransaction", component: AdminTransaction, meta: { requiresAuth: true, isAdmin: true } },
     { path: "/adminusers", name: "adminusers", component: AdminUsers, meta: { requiresAuth: true, isAdmin: true } },
     { path: "/adminmail", name: "adminmail", component: AdminMail, meta: { requiresAuth: true, isAdmin: true } },
+    { path: "/Mainlayout", name: "Mainlayout", component: Mainlayout },
   ],
+
 });
+
 
 router.beforeEach(async (to, from, next) => {
   const isAuthenticated = localStorage.getItem('token');
+  const userFromStorage = JSON.parse(localStorage.getItem('user'));
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/');
-  } else if (to.meta.requiresAuth) {
-    try {
-      const userData = await profile();
-      if (!userData) {
-        next('/');
-      } else if (to.meta.isAdmin && userData.is_admin === 0) {
-        next('/');
-      } else {
-        next();
-      }
-    } catch (error) {
-      console.error('Error during route guard:', error);
+  if (to.meta.requiresAuth) {
+    if (!isAuthenticated) {
       next('/');
+      return;
     }
-  } else {
-    next();
+
+    // Fetch user details if not present or expired
+    if (!userFromStorage) {
+      try {
+        const userDetail = await getUserDetail();
+        localStorage.setItem('user', JSON.stringify(userDetail));
+      } catch (error) {
+        console.error('Error fetching user detail:', error);
+        next('/');
+        return;
+      }
+    }
+
+    const updatedUserFromStorage = JSON.parse(localStorage.getItem('user'));
+
+    if (to.meta.isAdmin && (!updatedUserFromStorage || updatedUserFromStorage.is_admin == 0)) {
+      next('/');
+      return;
+    }
   }
+
+  next();
 });
 
 export default router;

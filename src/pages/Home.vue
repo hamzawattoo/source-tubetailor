@@ -165,13 +165,17 @@ import AddTiktokAccount from "../components/TikTok/Home/TiktokAddAccount.vue";
 import TiktokAnalytics from "../components/TikTok/Home/TiktokAnalytics.vue";
 import TiktokTopicIdeas from "../components/TikTok/Home/TiktokTopicIdeas.vue";
 import Loader from "../components/Loader.vue";
+import { getRequestApi , getUserDetail } from '../helper/api.js';
 import axios from "axios";
 import { ref } from "vue";
 const apiErrors = ref([]);
 const store = useTab();
+const user = ref(null);
+
 onMounted(() => {
   localStorage.removeItem('topic');
   youtubeOverview();
+  user.value = JSON.parse(localStorage.getItem('user'));
 })
 
 axios.defaults.withCredentials = true;
@@ -183,24 +187,32 @@ const tabKey = "currentTab";
 const overviewKeyPrefix = "youtubeOverview_";
 const isAccountAdded = ref(false);
 const showLoader = ref(false);
-async function youtubeConnect() {
-  try {
-    showLoader.value = true;
-    const { data } = await axios.get("youtube/auth", {
-      headers: {
-        "Returned-To": window.location.href,
-      },
-    });
-    showLoader.value = false;
-    window.location.href = data.target_url;
-  } catch (error) {
-    // Handle any errors if needed
-    console.error("Error occurred:", error);
-    showLoader.value = false;
-  } finally {
-    showLoader.value = false;
+const message = ref('');
+
+
+  const ifAlreadyConnected = () => {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    message.value = params.get('message');
   }
-}
+
+  async function youtubeConnect() {
+    try {
+      showLoader.value = true;
+      const { data } = await axios.get("youtube/auth", {
+        headers: {
+          "Returned-To": window.location.href,
+        },
+      });
+      showLoader.value = false;
+      window.location.href = data.target_url;
+    } catch (error) {
+      showLoader.value = false;
+    } finally {
+      localStorage.setItem('ssssssssssss', '1'); 
+      showLoader.value = false;
+    }
+  };
 function checkAccountStatus() {
   const accountData = localStorage.getItem('youtube');
   isAccountAdded.value = !!accountData;
@@ -210,6 +222,7 @@ function checkAccountStatus() {
 checkAccountStatus();
 
 async function youtubeOverview() {
+// if(user?.subscribed){
   const currentTab = localStorage.getItem(tabKey) || 1;
   localStorage.setItem(tabKey, currentTab);
   // Check if cached data is available in localStorage for the current tab
@@ -231,7 +244,7 @@ async function youtubeOverview() {
     localStorage.setItem(`${overviewKeyPrefix}Timestamp_${currentTab}`, new Date().toISOString());
     showLoader.value = false;
     // Set the account status to added
-    localStorage.setItem('yourAccountData', 'someData'); // Replace with the actual key or data
+    localStorage.setItem('yourAccountData', 'someData'); 
     isAccountAdded.value = true;
   } catch (error) {
     console.error('Error in fetching overview data:', error);
@@ -243,6 +256,7 @@ async function youtubeOverview() {
   }, 2000);
 
 }
+// }
 
 function isWithin24Hours(timestamp) {
   const now = new Date();

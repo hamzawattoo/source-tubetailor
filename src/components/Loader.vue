@@ -52,26 +52,26 @@
       </Dialog>
     </TransitionRoot>
 </template>
-  
-  <script setup>
-  import { ref, onMounted, watch } from "vue";
-  import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
-  
-  const props = defineProps(['showLoader']);
-  const open = ref(props.showLoader);
-  
-  watch(() => {
-    open.value = props.showLoader;
-  });
-  
-  const closeModal = () => {
-    open.value = false;
-  };
-  
-  onMounted(() => {
-    open.value = false; 
-  });
-  </script>
+<script setup>
+import { ref, onMounted, watch } from "vue";
+import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
+
+const props = defineProps(['showLoader']);
+const open = ref(props.showLoader);
+
+watch(() => props.showLoader, (newVal) => {
+  open.value = newVal;
+});
+
+const closeModal = () => {
+  open.value = false;
+};
+
+onMounted(() => {
+  open.value = false;
+});
+</script>
+
   
   <style scoped>
   .loader {

@@ -5,7 +5,7 @@
         <div class="flex-1 self-start">
           <fieldset>
             <legend class="sr-only">Notifications</legend>
-            <div class="flex flex-col sm:flex-row flex-wrap sm:items-center sm:justify-start gap-4 2xl:gap-10">
+            <div class="flex flex-col sm:flex-row flex-wrap sm:items-center sm:justify-start gap-4 2xl:gap-5">
               <div v-for="category in categories" :key="category.value" class="relative flex items-start">
                 <div class="flex h-6 items-center">
                   <input :id="category.value" :name="category.value" type="checkbox" v-model="selectedCategories" :value="category.value" class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-600" />
@@ -17,8 +17,15 @@
             </div>
           </fieldset>
         </div>
-        <div class="max-w-[200px] w-full self-end hidden">
-          <div class="slider flex items-center justify-between bg-white w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-red-500 sm:text-sm sm:leading-6 text-center">
+        <div class="max-w-xs w-full self-end flex gap-4">
+          <div class="flex-1 w-full">
+                <select
+                    class="slider flex items-center justify-between bg-white w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-red-500 sm:text-sm sm:leading-6 text-start"
+                    v-model="selectedYear" name="" id="">
+                    <option v-for="year in availableYears" :key="year" :value="year">{{ year }}</option>
+                </select>
+            </div>
+          <div class="slider flex-1 flex items-center justify-between bg-white w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-red-500 sm:text-sm sm:leading-6 text-center">
             <button @click="scrollLeft">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-500">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -46,7 +53,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(history, index) in historys" :key="index" class="py-2 rounded-lg border-b border-gray-400 text-gray-500">
+              <template v-if="historys.length > 0">
+                <tr v-for="(history, index) in historys" :key="index" class="py-2 rounded-lg border-b border-gray-400 text-gray-500">
                 <td class="px-4 py-4 text-[13px] whitespace-nowrap text-gray-800 font-medium">{{ history.category }}</td>
                 <td class="px-4 text-[13px] whitespace-nowrap">
                   <div class="flex items-center justify-start gap-2">
@@ -63,7 +71,7 @@
                 <td class="px-4 text-[13px] whitespace-nowrap">{{ history.date }}</td>
                 <td class="px-4 text-[13px] whitespace-nowrap text-start">
                   <div class="flex items-center justify-start">
-                    <button class="flex items-center justify-center text-center gap-2">
+                    <button @click="downloadPDF(history.id)" class="flex items-center justify-center text-center gap-2">
                       <span class="text-blue-600 font-medium text-md">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25" />
@@ -85,6 +93,17 @@
                   </button>
                 </td>
               </tr>
+              </template>
+              <template v-if="!historys.length > 0">
+                <tr>
+                  <td colspan="4">
+                    <div class="mt-2">
+                    <p class="text-center" v-if="showLoader">Loading...</p>
+                    <p v-else class="text-[13px] text-red-600">No users found for the selected year or month.</p>
+                  </div>
+                  </td>
+              </tr>
+              </template>
             </tbody>
           </table>
         </div>
@@ -92,20 +111,33 @@
     </TableLayout>
   </MainLayout>
 </template>
-
 <script setup>
 import MainLayout from "@/layouts/MainLayout.vue";
 import TableLayout from "@/layouts/TableLayout.vue";
 import useToastHook from "@/hooks/ToastMessage";
 import { ref, onMounted, computed, watch } from 'vue';
 import { getRequestApi } from "@/helper/api.js";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 
+const currentYear = ref(new Date().getFullYear());
+const currentMonth = ref(new Date().getMonth() + 1);
+const selectedMonthIndex = ref(currentMonth.value - 1);
 const { showSuccessToast, showErrorToast } = useToastHook();
 const isSaveCompetitor = ref([]);
 const savedTopic = ref([]);
 const historys = ref([]);
 
-// Define categories
+const availableYears = computed(() => {
+  const years = [];
+  const minYear = 2024;
+  for (let year = minYear; year <= currentYear.value; year++) {
+    years.push(year);
+  }
+  return years;
+});
+const selectedYear = ref(currentYear.value.toString());
+
 const categories = [
   { label: 'All', value: 'all' },
   { label: 'Optimization', value: 'optimization' },
@@ -115,10 +147,7 @@ const categories = [
 ];
 
 const selectedCategories = ref([]);
-const currentYear = ref(new Date().getFullYear());
-const currentMonth = ref(new Date().getMonth() + 1);
-const selectedMonthIndex = ref(currentMonth.value - 1);
-
+const showLoader = ref(false);
 const selectedMonth = computed(() => months[selectedMonthIndex.value]);
 
 const scrollLeft = () => {
@@ -139,13 +168,16 @@ const months = [
 
 async function fetchHistoryData() {
   try {
+    showLoader.value = true;
     const response = await getRequestApi('/history', {
-        categories: selectedCategories.value,
-        year: currentYear.value,
-        month: selectedMonthIndex.value + 1
+      categories: selectedCategories.value,
+      year: currentYear.value,
+      month: selectedMonthIndex.value + 1
     });
     historys.value = response.data;
+    showLoader.value = false;
   } catch (error) {
+    showLoader.value = false;
     showErrorToast('Failed to fetch history data');
   }
 }
@@ -155,10 +187,35 @@ const saveCompetitor = (index) => {
   showSuccessToast("Competitor saved");
 };
 
+const downloadPDF = (id) => {
+  const history = historys.value.find(history => history.id === id);
+  if (!history) {
+    showErrorToast('History item not found');
+    return;
+  }
+
+  const doc = new jsPDF();
+  doc.text("History Details", 14, 20);
+
+  const columns = [
+    { header: "Field", dataKey: "field" },
+    { header: "Value", dataKey: "value" }
+  ];
+
+  const data = Object.entries(history).map(([key, value]) => ({
+    field: key,
+    value: typeof value === 'object' ? JSON.stringify(value, null, 2) : value
+  }));
+
+  doc.autoTable({
+    head: [columns.map(col => col.header)],
+    body: data.map(item => columns.map(col => item[col.dataKey])),
+    startY: 30
+  });
+
+  doc.save(`history_${id}.pdf`);
+};
+
 onMounted(fetchHistoryData);
 watch([selectedCategories, selectedMonthIndex], fetchHistoryData);
 </script>
-
-<style scoped>
-/* Add any scoped CSS styles here */
-</style>

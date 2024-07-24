@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isSubscribed" class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
+    <div v-if="!isSubscribed.subscribed" class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
       <div class="flex">
         <div class="flex-shrink-0">
           <ExclamationTriangleIcon class="h-5 w-5 text-yellow-400" aria-hidden="true" />
@@ -17,5 +17,5 @@
   
   <script setup>
   import { ExclamationTriangleIcon } from '@heroicons/vue/20/solid';
-  const isSubscribed = JSON.parse(localStorage.getItem('isSubscribed')) || false;
+  const isSubscribed  = JSON.parse(localStorage.getItem('user'));
   </script>

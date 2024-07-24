@@ -106,9 +106,16 @@
 
         <div class="flex items-center self-stretch flex-1 bg-transparent border-b-2 lg:border-b-0 gap-x-4 lg:gap-x-6">
           <div class="flex-1">
-            <h1 class="text-[20px] lg:block hidden font-extrabold">
-              {{ store.headline }}
-            </h1>
+            <div class="flex items-center gap-2">
+              <button v-if="store.headline == 'Admindashboard'" @click="goBack">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                </svg>
+              </button>
+              <h1 class="text-[20px] lg:block hidden font-extrabold">
+                {{ store.headline }}
+              </h1>
+            </div>
             <img class="w-auto h-10 rounded-full lg:hidden" :src="smallLogo" alt="" />
           </div>
           <div class="flex items-center gap-x-4 lg:gap-x-6">
@@ -229,8 +236,8 @@ onMounted(() => {
   console.log("====================================");
 
   const currentRoute0 = currentRoute.value;
-  if (currentRoute0 === "/Dashboard") {
-    store.setHeadline("Dashboard");
+  if (currentRoute0 === "/adminDashboard") {
+    store.setHeadline("Admin Dashboard");
   } else if (currentRoute0 === "/Adminsettings") {
     store.setHeadline("Settings");
   } else if (currentRoute0 === "/Admintransaction") {
@@ -298,9 +305,7 @@ const userNavigation = [
 ];
 
 onMounted(() => {
-  getUserDetail().then(data =>{
-    user.value=data
-  })
+  user.value = JSON.parse(localStorage.getItem('user'));
 });
 
 async function signout() {
@@ -309,6 +314,9 @@ async function signout() {
   window.location.href = "/";
 }
 
+const goBack = () => {
+    window.history.back();
+};
 
 const sidebarOpen = ref(false);
 </script>

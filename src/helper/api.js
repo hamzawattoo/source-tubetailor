@@ -113,8 +113,10 @@ export async function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("loglevel");
     localStorage.removeItem('isSubscribed');
+    localStorage.removeItem('user');
   } catch (error) {
     localStorage.removeItem("token");
+    localStorage.removeItem('user');
     localStorage.removeItem("loglevel");
     localStorage.removeItem('isSubscribed');
     console.error("Error in YouTube marketing:", error);

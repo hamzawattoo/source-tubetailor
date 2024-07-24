@@ -1,7 +1,7 @@
 <template>
   <MainLayout>
     <div class="flex items-center justify-between pb-2">
-      <h1 class="text-gray-500">This List is automatically refreshes after every 7 days. Save the competitors that you want to track.</h1>
+      <h1 class="text-gray-500 text-sm">This List is automatically refreshes after every 7 days. Save the competitors that you want to track.</h1>
       <div class="">
         <button v-if="savedTopic" @click="viewSavedTopic" class="text-sm font-medium text-end text-red-500">View Saved Topic Ideas</button>
         <button v-if="!savedTopic" @click="viewSavedTopic" class="text-sm font-medium text-end text-red-500">View Topic Ideas</button>
@@ -73,8 +73,9 @@ import MainLayout from "@/layouts/MainLayout.vue";
 import TableLayout from "@/layouts/TableLayout.vue";
 import useToastHook from "../hooks/ToastMessage";
 import { ref, onMounted } from 'vue';
-import { getRequestApi } from '../helper/api.js';
+import { getRequestApi , getUserDetail } from '../helper/api.js';
 
+const user = ref(null);
 const { showSuccessToast, showErrorToast } = useToastHook();
 const competitors = ref([]);
 const isSaveCompetitor = ref([]);
@@ -94,7 +95,10 @@ const saveCompetitor = (index) => {
   }
 };
 
+
+
 async function Competitors() {
+if(user?.subscribed){
   try {
     let competitorsResponse;
     const storedData = localStorage.getItem('competitorsData');
@@ -113,16 +117,18 @@ async function Competitors() {
       localStorage.setItem('competitorsData', JSON.stringify(competitors.value));
       localStorage.setItem('competitorsDataTime', currentTime.toString());
     }
-
-    console.log(competitors.value);
   } catch (error) {
-    showErrorToast(error);
+    showErrorToast("Failed to fetch competitors");
   }
 }
+};
+
 
 onMounted(() => {
   Competitors();
+  const user = JSON.parse(localStorage.getItem('user'));
 });
+
 setInterval(() => {
   Competitors();
 }, 24 * 60 * 60 * 1000);

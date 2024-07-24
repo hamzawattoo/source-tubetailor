@@ -30,8 +30,12 @@
              <span class="text-gray-600">File name:</span> {{ selectedFile?.name }}
             </div>
             <div class="w-full text-end">
-              <label for="fileInput" class="text-sm px-[20px] py-[4px] rounded-full bg-red-600 text-white cursor-pointer">
-                Browse
+              <label v-if="selectedFile?.name" for="fileInput" class="text-sm px-[20px] py-[4px] rounded-full bg-red-600 text-white cursor-pointer">
+                <span @click="removeFile">Remove</span>
+                <input id="fileInput" type="file" class="hidden" @change="handleFileChange">
+              </label>
+              <label v-if="!selectedFile?.name" for="fileInput" class="text-sm px-[20px] py-[4px] rounded-full bg-red-600 text-white cursor-pointer">
+                  <span>Browse</span> 
                 <input id="fileInput" type="file" class="hidden" @change="handleFileChange">
               </label>
             </div>
@@ -404,6 +408,9 @@ function changeTabMarketing(tab) {
 const onSuccess = () => {
   showSuccessToast("Copied");
 };
+const removeFile = () => {
+  selectedFile.value = null;
+};
 const handleFileChange = (event) => {
     const file = event.target.files[0];
     selectedFile.value = file;
@@ -417,23 +424,62 @@ const people = [
   { data : 'Youtube Tag' },
 ];
 async function youtubeOptimization() {
-  if (!textValue.value.trim()) {
-    textValueValidationMessage.value = "Please write a script";
+  // Check if at least one of the required fields is provided
+  const hasScript = textValue.value.trim() !== "";
+  const hasLink = youtubeLink.value.trim() !== "";
+  const hasFile = !!selectedFile.value;
+
+  if (!hasScript && !hasLink && !hasFile) {
+    textValueValidationMessage.value = "Please provide at least one: script, link, or file";
     return;
   }
+
+  // Reset validation message
   textValueValidationMessage.value = "";
   showLoader.value = true;
+
+  // Validate link if provided
+  if (hasLink) {
+    const youtubeLinkPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+    if (!youtubeLinkPattern.test(youtubeLink.value)) {
+      textValueValidationMessage.value = "Please provide a valid YouTube link";
+      showLoader.value = false;
+      return;
+    }
+
+    // Extract video ID from link
+    const videoIdPattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+    const match = youtubeLink.value.match(videoIdPattern);
+    if (!match || match[1].length !== 11) {
+      textValueValidationMessage.value = "Please provide a valid YouTube video ID";
+      showLoader.value = false;
+      return;
+    }
+  }
+
+  // Validate file if provided
+  if (hasFile) {
+    const allowedFileTypes = ['text/plain', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/markdown'];
+    if (!allowedFileTypes.includes(selectedFile.value.type)) {
+      textValueValidationMessage.value = "Please provide a valid file (txt, md, pdf, docx)";
+      showLoader.value = false;
+      return;
+    }
+  }
+
+  // Prepare the form data
+  const formData = new FormData();
+  if (hasScript) {
+    formData.append("script", textValue.value);
+  } else if (hasLink) {
+    formData.append("link", String(youtubeLink.value));
+  } else if (hasFile) {
+    formData.append("file", selectedFile.value);
+  }
 
   let completedRequests = 0;
 
   try {
-    const formData = new FormData();
-    formData.append("script", textValue.value);
-    formData.append("link", youtubeLink.value ? String(youtubeLink.value) : null);
-    if (selectedFile.value) {
-      formData.append("file", selectedFile.value);
-    }
-
     const optimizationResponse = await postRequest("youtube/optimization", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -447,22 +493,22 @@ async function youtubeOptimization() {
     result3.value = optimizationResponse.results[2];
     tags.value = optimizationResponse.results.tags;
     apiResponse.value = optimizationResponse.subreddits;
-    recommendedTitle1.value = result1.value.title
-    recommendedTitle2.value = result2.value.title
-    recommendedTitle3.value = result3.value.title
-    recommendedDescription1.value = result1.value.description
-    recommendedDescription2.value = result2.value.description
-    recommendedDescription3.value = result3.value.description
-    recommendedIdea1.value = result1.value.thumbnail_idea
-    recommendedIdea2.value = result2.value.thumbnail_idea
-    recommendedIdea3.value = result3.value.thumbnail_idea
-    // showLoader.value = false;
+    recommendedTitle1.value = result1.value.title;
+    recommendedTitle2.value = result2.value.title;
+    recommendedTitle3.value = result3.value.title;
+    recommendedDescription1.value = result1.value.description;
+    recommendedDescription2.value = result2.value.description;
+    recommendedDescription3.value = result3.value.description;
+    recommendedIdea1.value = result1.value.thumbnail_idea;
+    recommendedIdea2.value = result2.value.thumbnail_idea;
+    recommendedIdea3.value = result3.value.thumbnail_idea;
+
     storeContent.$patch((state) => {
-      state.YoutubeoptimizationResponse = optimizationResponse
-      state.scriptContentGenerator = textValue.value
-      state.youtubeLink = youtubeLink.value
-      })
-    // return;
+      state.YoutubeoptimizationResponse = optimizationResponse;
+      state.scriptContentGenerator = textValue.value;
+      state.youtubeLink = youtubeLink.value;
+    });
+
     if (optimizationResponse.message) {
       textValueValidationMessage.value = optimizationResponse.message;
     } else {
@@ -470,6 +516,7 @@ async function youtubeOptimization() {
     }
     completedRequests++;
   } catch (error) {
+    textValueValidationMessage.value = error.response.data.message || "An error occurred";
     completedRequests++;
   }
 
@@ -480,7 +527,9 @@ async function youtubeOptimization() {
   setTimeout(() => {
     apiErrors.value = [];
   }, 2000);
-}
+};
+
+
 onMounted(() => {
   if(storeContent.YoutubeoptimizationResponse) {
     allresults.value = storeContent.YoutubeoptimizationResponse.results;

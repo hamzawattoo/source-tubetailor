@@ -63,9 +63,9 @@
     <div class="hidden lg:fixed lg:inset-y-0 lg:z-10 lg:flex lg:w-72 lg:flex-col">
       <!-- Sidebar component, swap this element with another sidebar if you like -->
       <div class="example flex flex-col px-6 py-4 pb-4 overflow-y-auto bg-white border-r border-gray-200 grow gap-y-5">
-        <div class="flex items-center h-16 shrink-0">
+        <router-link to="/" class="flex items-center h-16 shrink-0">
           <img class="w-auto h-16" :src="Logo" alt="Your Company" />
-        </div>
+        </router-link>  
 
         <nav class="flex flex-col flex-1">
           <ul role="list" class="flex flex-col items-start mt-4 gap-y-7">
@@ -103,9 +103,16 @@
 
         <div class="flex items-center self-stretch flex-1 bg-transparent border-b-2 lg:border-b-0 gap-x-4 lg:gap-x-6">
           <div class="flex-1">
-            <h1 class="text-[20px] lg:block hidden font-extrabold">
-              {{ store.headline }}
-            </h1>
+            <div class="flex items-center gap-2">
+              <button v-if="store.headline !== 'Dashboard'" @click="goBack">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                </svg>
+              </button>
+              <h1 class="text-[20px] lg:block hidden font-extrabold">
+                {{ store.headline }}
+              </h1>
+            </div>
             <img class="w-auto h-10 rounded-full lg:hidden" :src="smallLogo" alt="" />
           </div>
           <div class="flex items-center gap-x-4 lg:gap-x-6">
@@ -136,16 +143,24 @@
                 <MenuItems
                   class="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                   <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                    <button @click="signout" v-if="item?.id == 'signout'" :class="[
-      active ? 'bg-gray-50' : '',
-      'block px-3 py-1 text-sm leading-6 text-gray-900',
-    ]">{{ item.name }}</button>
-                  <router-link v-else :to="item.href" :class="[
-      active ? 'bg-gray-50' : '',
-      'block px-3 py-1 text-sm leading-6 text-gray-900',
-    ]">{{ item.name }}</router-link>
+                    <template v-if="item.id === 'adminDashboard' && user?.is_admin == 1">
+                      <router-link to="/adminDashboard" :class="['block px-3 py-1 text-sm leading-6 text-gray-900', active ? 'bg-gray-50' : '']">
+                         Admin Panel
+                      </router-link>
+                    </template>
+                    <template v-else-if="item.id === 'signout'">
+                      <button @click="signout" :class="['block px-3 py-1 text-sm leading-6 text-gray-900', active ? 'bg-gray-50' : '']">
+                        {{ item.name }}
+                      </button>
+                    </template>
+                    <template v-else>
+                      <router-link :to="item.href" :class="['block px-3 py-1 text-sm leading-6 text-gray-900', active ? 'bg-gray-50' : '']">
+                        {{ item.name }}
+                      </router-link>
+                    </template>
                   </MenuItem>
-                </MenuItems>
+
+                </MenuItems>  
               </transition>
             </Menu>
             <button type="button" class="-m-2.5 md:p-2.5 p-1.5 text-[#414D61] bg-[#EFF4FD] rounded-lg lg:hidden"
@@ -168,13 +183,6 @@
 </template>
 
 <script setup>
-import Logo from "@/assets/Logo.png";
-import smallLogo from "@/assets/smallLogo.png";
-import Modal from "@/components/Modal.vue";
-import { ref, onMounted } from "vue";
-import Tabs from "@/components/Tabs.vue";
-import isSubscribedAlert from "@/components/isSubscribed.vue";
-
 import {
   Dialog,
   DialogPanel,
@@ -197,6 +205,12 @@ import {
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/vue/24/outline";
+import Logo from "@/assets/Logo.png";
+import smallLogo from "@/assets/smallLogo.png";
+import Modal from "@/components/Modal.vue";
+import { ref, onMounted, computed } from "vue";
+import Tabs from "@/components/Tabs.vue";
+import isSubscribedAlert from "@/components/isSubscribed.vue";
 import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/vue/20/solid";
 import DashSVG from "@/svgs/DashSVG.vue";
 import DollarSVG from "@/svgs/DollarSVG.vue";
@@ -210,14 +224,13 @@ import {logout} from "../helper/api";
 
 const store = useHeadline();
 const show = ref(false);
-function showModal() {
-  this.show = !this.show;
-}
-//current route
-
 const router = useRouter();
 const currentRoute = ref(router.currentRoute.value.path);
 const user = ref(null);
+
+function showModal() {
+  this.show = !this.show;
+};
 
 onMounted(() => {
 
@@ -240,17 +253,28 @@ onMounted(() => {
     store.setHeadline("Community Tools");
   } else if (currentRoute0 === "/account-Settings") {
     store.setHeadline("Account Settings");
+  } else if (currentRoute0 === "/pricing-plans") {
+    store.setHeadline("Pricing Plans");
   }
+
 
   router.afterEach((to, from) => {
     currentRoute.value = to.path;
   });
 
-  getUserDetail().then(data =>{
-    user.value=data
-  })
 });
 
+
+async function signout() {
+  await logout()
+  localStorage.removeItem('isSubscribed');
+  window.location.href = "/";
+};
+
+
+const goBack = () => {
+    window.history.back();
+};
 const navigation = [
   {
     name: "Dashboard",
@@ -297,13 +321,11 @@ const teams = [
 const userNavigation = [
   { name: "Your profile", href: "/account-Settings" },
   { name: "Sign out", href: "#", id:"signout" },
-  { name: "Admin panel", href: "adminDashboard" },
-];
-async function signout() {
-  await logout()
-  localStorage.removeItem('isSubscribed');
-  window.location.href = "/";
-}
+  { name:null, href: '/adminDashboard', id: 'adminDashboard'   },
+  ];
 
+onMounted(() => {
+  user.value = JSON.parse(localStorage.getItem('user'));
+});
 const sidebarOpen = ref(false);
 </script>
