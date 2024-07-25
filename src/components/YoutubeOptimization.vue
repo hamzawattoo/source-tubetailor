@@ -371,7 +371,7 @@ import CircleProgress from "@/components/CircleProgress.vue";
 import useToastHook from "../hooks/ToastMessage";
 import { postRequest } from "../helper/api.js";
 import Modal from "@/components/Loader.vue";
-import isSubscribedAlert from "@/components/IsSubscribed.vue";
+import isSubscribedAlert from "@/components/isSubscribed.vue";
 
 const storeContent = useMainStore();
 const { showSuccessToast, showErrorToast } = useToastHook();
