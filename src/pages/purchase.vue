@@ -37,13 +37,13 @@
           <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ planData?.plan.updated_at }}</dd>
         </div>
       </dl>
-      <div class="w-full max-w-xl flex-1">
+      <div class="w-full max-w-3xl flex-1">
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
           <div class="bg-[#414D61] text-white p-4">
             You will be charged {{ formattedPrice }} for {{ formattedPlanName }} Plan
           </div>
           <div class="p-4">
-            <div v-if="message" :class="`px-4 py-2.5 mb-4 text-sm rounded-md flex items-center gap-2 ${message.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`">
+            <div v-if="message" :class="`px-4 py-2.5 mb-4 text-sm rounded-md flex items-start gap-2 ${message.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`">
               <svg v-if="message.type === 'error'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-red-700">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
               </svg>
@@ -163,19 +163,20 @@ export default {
       this.loading = true;
       try {
         const response = await axios.post('subscription', new FormData(form));
-        console.log(response);
-        if (response.data.message) {
+        if (response.status === 200) {
           this.message = { type: 'success', text: 'Payment processed successfully. Redirecting to dashboard...' };
           const userDetail = await getUserDetail();
           localStorage.setItem('user', JSON.stringify(userDetail));
           setTimeout(() => {
             window.location.href = '/dashboard';
           }, 2000);
-        } else {
-          this.message = { type: 'error', text: 'response.data.message5555555555555' };
-        } 
+        }else if(response.status === 409){
+          this.message = { type: 'error', text: 'You already have an active subscription. Not allowed to multiple subscriptions at time.' };
+        }else{
+          this.message = { type: 'error', text: 'Something went wrong. Please try again later.' };
+        }
       } catch (error) {
-        this.message = { type: 'error', text:  'response.data.messagefdfdfdfdfd' };
+        this.message = { type: 'error', text: error.response.data.message };
       } finally {
         this.loading = false;
       }
@@ -184,8 +185,7 @@ export default {
       window.history.back();
     },
     handleSubmit() {
-      // This function will be called upon form submission
-      // It will handle the stripe setup and form submission
+      this.loading = true;
     }
   },
   computed: {

@@ -21,6 +21,8 @@
     "clipboard-copy": "^4.0.1",
     "easy-circular-progress": "^1.0.4",
     "floating-vue": "^2.0.0-beta.24",
+    "flowbite": "^2.4.1",
+    "flowbite-vue": "^0.1.5",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",

@@ -53,7 +53,7 @@
               </tr>
             </thead>
             <tbody>
-              <template v-if="historys.length > 0">
+              <template v-if="historys?.length > 0">
                 <tr v-for="(history, index) in historys" :key="index" class="py-2 rounded-lg border-b border-gray-400 text-gray-500">
                 <td class="px-4 py-4 text-[13px] whitespace-nowrap text-gray-800 font-medium">{{ history.category }}</td>
                 <td class="px-4 text-[13px] whitespace-nowrap">
@@ -94,24 +94,37 @@
                 </td>
               </tr>
               </template>
-              <template v-if="!historys.length > 0">
+              <p class="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-50" v-if="showLoader">Loading...</p>
+              <template v-if="!historys?.length > 0">
                 <tr>
                   <td colspan="4">
                     <div class="mt-2">
-                    <p class="text-center" v-if="showLoader">Loading...</p>
-                    <p v-else class="text-[13px] text-red-600">No users found for the selected year or month.</p>
+                    <p class="text-[13px] text-red-600">No users found for the selected year or month. {{ currentPage }}</p>
                   </div>
                   </td>
               </tr>
               </template>
             </tbody>
           </table>
+          <div class="mt-4 flex items-center justify-center">
+            <fwb-pagination
+                v-if="historys?.length > 0"
+                v-model="currentPage"
+                :total-items="40"
+                :per-page="per_page"
+                :enableFirstAndLastButtons="true"
+                :showLabels="true"
+                :layout="'pagination'">
+            </fwb-pagination>
+          </div>
         </div>
       </div>
+
     </TableLayout>
   </MainLayout>
 </template>
 <script setup>
+import { FwbPagination } from 'flowbite-vue';
 import MainLayout from "@/layouts/MainLayout.vue";
 import TableLayout from "@/layouts/TableLayout.vue";
 import useToastHook from "@/hooks/ToastMessage";
@@ -125,7 +138,7 @@ const currentMonth = ref(new Date().getMonth() + 1);
 const selectedMonthIndex = ref(currentMonth.value - 1);
 const { showSuccessToast, showErrorToast } = useToastHook();
 const isSaveCompetitor = ref([]);
-const savedTopic = ref([]);
+const savedTopic = ref([]); // Remove this line if 'savedTopic' is not being used in the code.
 const historys = ref([]);
 
 const availableYears = computed(() => {
@@ -142,14 +155,15 @@ const categories = [
   { label: 'All', value: 'all' },
   { label: 'Optimization', value: 'optimization' },
   { label: 'Keyword Research', value: 'keyword_research' },
-  { label: 'Content Generation', value: 'content_generation' },
+  { label: 'Content Generation', value: 'content_generation' }, 
   { label: 'Voiceover', value: 'voiceover' }
 ];
 
 const selectedCategories = ref([]);
 const showLoader = ref(false);
 const selectedMonth = computed(() => months[selectedMonthIndex.value]);
-
+const currentPage = ref(1)
+const pagination = ref({});
 const scrollLeft = () => {
   if (selectedMonthIndex.value > 0) {
     selectedMonthIndex.value--;
@@ -172,15 +186,26 @@ async function fetchHistoryData() {
     const response = await getRequestApi('/history', {
       categories: selectedCategories.value,
       year: currentYear.value,
-      month: selectedMonthIndex.value + 1
+      month: selectedMonthIndex.value + 1,
+      page: currentPage.value 
     });
     historys.value = response.data;
+    pagination.value = {
+      total: response.data.total,
+      perPage: response.data.per_page,
+      currentPage: response.data.current_page,
+      lastPage: response.data.last_page,
+      from: response.data.from,
+      to: response.data.to
+    };
     showLoader.value = false;
   } catch (error) {
     showLoader.value = false;
     showErrorToast('Failed to fetch history data');
   }
 }
+
+
 
 const saveCompetitor = (index) => {
   isSaveCompetitor.value[index] = !isSaveCompetitor.value[index];
@@ -217,5 +242,6 @@ const downloadPDF = (id) => {
 };
 
 onMounted(fetchHistoryData);
+watch(currentPage, fetchHistoryData);
 watch([selectedCategories, selectedMonthIndex], fetchHistoryData);
 </script>

@@ -221,7 +221,14 @@ import { useRouter } from "vue-router";
 import { useHeadline } from "../store/Headline";
 import { getUserDetail } from "../helper/api.js";
 import {logout} from "../helper/api";
+import { eventBus } from '../store/eventBus.js';
 
+function handleReRender() {
+  user.value = JSON.parse(localStorage.getItem('user'));
+}
+onMounted(() => {
+  eventBus.$on('reRenderComponentB', handleReRender);
+});
 const store = useHeadline();
 const show = ref(false);
 const router = useRouter();

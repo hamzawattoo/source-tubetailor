@@ -131,13 +131,15 @@
   import useToastHook from "../hooks/ToastMessage";
   import { getRequestApi, putRequest } from "../helper/api";
   import { getUserDetail } from "../helper/api.js";
-
+  import { eventBus } from '../store/eventBus.js';
   const { showSuccessToast, showErrorToast } = useToastHook();
   const loading = ref(false);
   const planData = ref(null);
   const user = ref({});
   const purchasePlan = ref(null);
-  
+  function triggerReRender() {
+  eventBus.$emit('reRenderComponentB');
+}
   const profile = async () => {
     try {
       const userData = await getRequestApi('profile');
@@ -209,10 +211,11 @@
         try {
           const userDetail = await getUserDetail();
           localStorage.setItem('user', JSON.stringify(userDetail));
+          triggerReRender();
         } catch (error) {
           console.error('Error fetching user:', error);
         }
-        window.location.reload();
+        // window.location.reload();
         loading.value = false;
       showSuccessToast("Profile Updated Successfully");
     } catch (error) {

@@ -6,7 +6,7 @@ import router from "./router";
 import VueApexCharts from "vue3-apexcharts";
 import { VueClipboard } from "@soerenmartius/vue3-clipboard";
 import GlobalAlert from './components/Alert.vue';
-
+import '../node_modules/flowbite-vue/dist/index.css';
 const pinia = createPinia();
 
 const app = createApp(App);
