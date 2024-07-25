@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/pages/Home.vue";
-import Mainlayout from "@/layouts/Mainlayout.vue";
 import Purchase from "@/pages/purchase.vue";
 import Marketing from "@/pages/Marketing.vue";
 import History from "@/pages/History.vue";
@@ -41,7 +40,6 @@ const router = createRouter({
     { path: "/admintransaction", name: "admintransaction", component: AdminTransaction, meta: { requiresAuth: true, isAdmin: true } },
     { path: "/adminusers", name: "adminusers", component: AdminUsers, meta: { requiresAuth: true, isAdmin: true } },
     { path: "/adminmail", name: "adminmail", component: AdminMail, meta: { requiresAuth: true, isAdmin: true } },
-    { path: "/Mainlayout", name: "Mainlayout", component: Mainlayout },
   ],
 
 });
