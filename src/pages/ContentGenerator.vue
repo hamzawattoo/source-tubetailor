@@ -67,11 +67,11 @@
       <div class="max-w-xs w-full ml-2">
         <div>
           <select v-model="selectedLanguage" class="bg-white block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-red-500 sm:text-sm sm:leading-6">
-            <option value="english">english</option>
-            <option value="spanish">spanish</option>
-            <option value="french">french</option>
-            <option value="german">german</option>
-            <option value="portuguese">portuguese</option>
+            <option value="english">English</option>
+            <option value="spanish">Spanish</option>
+            <option value="french">French</option>
+            <option value="german">German</option>
+            <option value="portuguese">Portuguese</option>
           </select>
         </div>
       </div>
@@ -1214,7 +1214,7 @@ export default {
   },
   data() {
     return {
-      selectedLanguage:'spanish',
+      selectedLanguage:'english',
       checkboxOne: true,
       store: useTab(),
       peopleVoiceOver: [],

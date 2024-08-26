@@ -1,6 +1,9 @@
 <template>
   <div class="" id="main_content">
-    <header class="site-header header-two header_trans-fixed" data-top="992">
+    <PrivacyPolicy :isOpen="isPrivacyModal" @close="isPrivacyModal = false" />
+    <howToUse :isOpen="isHowToUse" @close="isHowToUse = false" />  
+    <Termsandconditions :isOpen="isTermAndConditions" @close="isTermAndConditions = false" />
+    <header class="site-header header-two header_trans-fixed pix-header-fixed" data-top="992">
       <div class="max-w-7xl mx-auto px-4">
         <div class="header-inner">
           <div class="site-mobile-logo">
@@ -519,35 +522,29 @@
 
           <!-- Column 2 -->
           <div class="p-4">
-            <h2 class="text-[#111C52] text-[20px] font-bold">Useful Links</h2>
+            <h2 class="text-[#111C52] !text-[24px] font-bold">Useful Links</h2>
             <div class="flex flex-col gap-4 pt-10">
-              <a href="/" class="text-gray-600 hover:underline">Blog</a>
-              <a href="/" class="text-gray-600 hover:underline">Pricing</a>
-              <a href="/" class="text-gray-600 hover:underline">About</a>
+              <a class="text-gray-600 hover:underline">Blog</a>
+              <a class="text-gray-600 hover:underline">Pricing</a>
+              <a class="text-gray-600 hover:underline">About</a>
             </div>
           </div>
           <div class="p-4">
-            <h2 class="text-[#111C52] text-[20px] font-bold">Terms</h2>
+            <h2 class="text-[#111C52] !text-[24px] font-bold">Terms</h2>
             <div class="flex flex-col gap-4 pt-10">
-              <a href="/" class="text-gray-600 hover:underline">TOS</a>
-              <a href="/" class="text-gray-600 hover:underline"
-                >Privacy Policy</a
-              >
-              <a href="/" class="text-gray-600 hover:underline"
-                >Refund Policy</a
-              >
+              <a @click="isPrivacyModal = !isPrivacyModal" class="text-gray-600 hover:!underline cursor-pointer">Privacy Policy</a>
+              <a @click="isTermAndConditions = !isTermAndConditions" class="text-gray-600 hover:!underline cursor-pointer">Terms and conditions</a>
+              <a @click="isHowToUse = !isHowToUse" class="text-gray-600 hover:!underline cursor-pointer">How we use your data</a> 
             </div>
           </div>
 
           <!-- Column 3 -->
           <div class="p-4">
-            <h2 class="text-[#111C52] text-[20px] font-bold">Support & Help</h2>
+            <h2 class="text-[#111C52] !text-[24px] font-bold">Support & Help</h2>
             <div class="flex flex-col gap-4 pt-10">
-              <a href="/" class="text-gray-600 hover:underline"
-                >Open Support Ticket</a
-              >
-              <a href="/" class="text-gray-600 hover:underline">Terms of Use</a>
-              <a href="/" class="text-gray-600 hover:underline">About</a>
+              <a class="text-gray-600 hover:underline">Open Support Ticket</a>
+              <a class="text-gray-600 hover:underline">Terms of Use</a>
+              <a class="text-gray-600 hover:underline">About</a>
             </div>
           </div>
 
@@ -556,7 +553,7 @@
           <!-- Add more columns as needed -->
         </div>
         <div class="flex items-center justify-center py-10">
-          <h2>
+          <h2 class="!text-lg">
             <span class="text-youtube">Built on Stellar </span>|
             info@tubetailor.io
           </h2>
@@ -591,6 +588,9 @@ const { showSuccessToast, showErrorToast } = useToastHook();
 import { ref } from "vue";
 import axios from 'axios';
 import {getRequestApi,getRequestApiWithoutAuth, logout} from "../helper/api";
+import PrivacyPolicy from "@/pages/PrivacyPolicy.vue";
+import howToUse from "@/pages/howToUse.vue";
+import Termsandconditions from "@/pages/Terms&conditions.vue";
 
 const isPlaying = ref(false);
 const isAuthenticated = ref(false);
@@ -606,7 +606,9 @@ const togglePlay = () => {
 };
 isAuthenticated.value = localStorage.getItem('token');
 const api_baseURL = 'https://backend.tubetailor.ai/api/';
-
+const isPrivacyModal = ref(false);
+const isHowToUse = ref(false);
+const isTermAndConditions = ref(false);
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = api_baseURL;
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;

@@ -21,6 +21,11 @@
 import { ExclamationTriangleIcon } from '@heroicons/vue/20/solid';
 
 export default {
+  // return {
+    components: {
+      ExclamationTriangleIcon
+    },
+  // },
   props: {
     messages: {
       type: String,

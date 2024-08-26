@@ -24,11 +24,14 @@
                     </li>
                 </ul>
                 <div class="action text-left">
-                    <router-link :to="'/plan/' + plan.slug" v-if="isAuthenticated">
+                    <router-link  :to="'/Upgradeplan/' + plan.slug" v-if="isAuthenticated && isSubscribed.subscribed">
+                        <span class="pix-btn btn-outline-two">Get Started</span>
+                    </router-link>
+                    <router-link  :to="'/plan/' + plan.slug" v-else-if="isAuthenticated && !isSubscribed.subscribed">
                         <span class="pix-btn btn-outline-two">Get Started</span>
                     </router-link>
                     <button @click="login" v-else><span class="pix-btn btn-outline-two">Get Started</span></button>
-                </div>
+                                    </div>
             </div>
             </TableLayout>
             <!-- /.pricing-table -->
@@ -62,6 +65,8 @@ const { showSuccessToast, showErrorToast } = useToastHook();
 import { ref } from "vue";
 import axios from 'axios';
 import { getRequestApi, getRequestApiWithoutAuth, logout } from "../helper/api";
+
+const isSubscribed  = JSON.parse(localStorage.getItem('user'));
 
 const isPlaying = ref(false);
 const isAuthenticated = ref(false);
@@ -131,44 +136,5 @@ const tabs = ref([
 function selectTab(selectedTab) {
     tabs.value.forEach(tab => (tab.isActive = tab === selectedTab))
 }
-
-const iconBoxes = ref([
-    {
-        icon: Icon1,
-        title: "Craft Perfection",
-        description: "Elevate your content with our optimization tool that generates ideal titles, descriptions, tags, and thumbnail ideas, specifically tailored to enhance the appeal and reach of your videos.",
-        delay: "0.5s"
-    },
-    {
-        icon: Icon2,
-        title: "Strategic Promotion",
-        description: "Get a curated list of the most suitable subreddits for promoting your video and receive customized tweets and threads posts, all designed to maximize your video's visibility and engagement.",
-        delay: "0.6s"
-    },
-    {
-        icon: Icon3,
-        title: "Master Your Keywords",
-        description: "Gain insights with detailed keyword analysis. Discover a range of easy-to-dominate keywords for your next project, ensuring your content stays ahead of the curve.",
-        delay: "0.7s"
-    },
-    {
-        icon: Icon4,
-        title: "Competitor Channel Tracking",
-        description: "Keep an eye on your competition with our tracking tools. Analyze their strategies and performance to refine and enhance your own content marketing approach.",
-        delay: "0.8s"
-    },
-    {
-        icon: Icon5,
-        title: "Engage Effortlessly",
-        description: "Streamline your community management with TubeTailor. From responding to comments to keeping the conversation alive, our AI handles it, allowing you to focus on creating more great content.",
-        delay: "0.9s"
-    },
-    {
-        icon: Icon6,
-        title: "Triple the Impact",
-        description: "TubeTailor isn't just for YouTube; it's a multi-platform powerhouse. Optimize your content across YouTube, including shorts, Instagram Reels, and TikTok, ensuring cohesive and effective content strategy across channels.",
-        delay: "1s"
-    }
-]);
 
 </script>

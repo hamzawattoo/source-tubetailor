@@ -6,15 +6,15 @@
         :completed-steps="completedSteps"
         :total-steps="totalSteps"
         innerStrokeColor="#f3f4f6"
-        :startColor="'#F1EB90'"
-        :stopColor="'#FF6C22'"
-        :innerStrokeWidth="3"
-        :strokeWidth="3"
+        :startColor="startColor"
+        :stopColor="stopColor"
+        :innerStrokeWidth="6"
+        :strokeWidth="6"
       >
-        <div class="flex gap-1">
-          <p class="font-medium text-xs sm:text-sm">{{ completedSteps }}</p>
+        <div class="flex gap-1 text-xs font-num">
+          <p class="text-[0.60rem] font-num">{{ completedSteps }}</p>
           /
-          <p class="font-medium text-xs sm:text-sm">{{ totalSteps }}</p>
+          <p class="text-[0.60rem] font-num">{{ totalSteps }}</p>
         </div>
       </radial-progress-bar>
       <h1 class="text-[12px] pt-3 font-semibold whitespace-nowrap">{{ text }}</h1>
