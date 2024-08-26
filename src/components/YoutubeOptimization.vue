@@ -78,27 +78,27 @@
               <div class="min-w-full overflow-hidden">
                 <div class="example flex overflow-x-scroll gap-8 items-center justify-between py-2">
                   <div class="p-6 bg-white rounded-xl bg-shadow border w-full text-center">
-                    <CircleProgress v-if="score?.clarity" startColor="#ff0000" stopColor="#ffa500"
+                    <CircleProgress v-if="score?.clarity" startColor="#9333ea" stopColor="#9333ea"
                       :completedSteps="score?.clarity" :totalSteps="10" text="Clarity" />
-                    <CircleProgress v-else startColor="#ff0000" stopColor="#ffa500" :completedSteps="'N/A'"
+                    <CircleProgress v-else startColor="#bfdbfe" stopColor="#ffa500" :completedSteps="0"
                       :totalSteps="10" text="Clarity" />
                   </div>
                   <div class="p-6 bg-white rounded-xl bg-shadow border w-full text-center">
-                    <CircleProgress v-if="score?.clarity" startColor="#ff0000" stopColor="#ffa500"
+                    <CircleProgress v-if="score?.clarity" startColor="#d946ef" stopColor="#d946ef"
                       :completedSteps="score?.originality" :totalSteps="10" text="Originality" />
-                    <CircleProgress v-else startColor="#ff0000" stopColor="#ffa500" :completedSteps="'N/A'"
+                    <CircleProgress v-else startColor="#ff0000" stopColor="#ffa500" :completedSteps="0"
                       :totalSteps="10" text="Originality" />
                   </div>
                   <div class="p-6 bg-white rounded-xl bg-shadow border w-full text-center">
                     <CircleProgress v-if="score?.clarity" startColor="#ff0000" stopColor="#ffa500"
                       :completedSteps="score?.engagement" :totalSteps="10" text="Engagement" />
-                    <CircleProgress v-else startColor="#ff0000" stopColor="#ffa500" :completedSteps="'N/A'"
+                    <CircleProgress v-else startColor="#ff0000" stopColor="#ffa500" :completedSteps="0"
                       :totalSteps="10" text="Engagement" />
                   </div>
                   <div class="p-6 bg-white rounded-xl bg-shadow border w-full text-center">
                     <CircleProgress v-if="score?.clarity" startColor="#ff0000" stopColor="#ffa500"
                       :completedSteps="score?.structure" :totalSteps="10" text="Structure" />
-                    <CircleProgress v-else startColor="#ff0000" stopColor="#ffa500" :completedSteps="'N/A'"
+                    <CircleProgress v-else startColor="#ff0000" stopColor="#ffa500" :completedSteps="0"
                       :totalSteps="10" text="Structure" />
                   </div>
                 </div>
@@ -558,5 +558,5 @@ onMounted(() => {
       apiResponse.value = storeContent.YoutubeoptimizationResponse;
     }
   }
-})
+});
 </script>

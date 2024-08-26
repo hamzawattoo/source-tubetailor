@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/pages/Home.vue";
 import Purchase from "@/pages/purchase.vue";
+import Upgrade from "@/pages/UpgradePlan.vue";
 import Marketing from "@/pages/Marketing.vue";
 import History from "@/pages/History.vue";
 import ContentGenerator from "@/pages/ContentGenerator.vue";
@@ -24,6 +25,7 @@ const router = createRouter({
   routes: [
     { path: "/", name: "landing", component: Landing },
     { path: "/plan/:slug", name: "purchase", props: true, component: Purchase },
+    { path: "/Upgradeplan/:slug", name: "Upgrade", props: true, component: Upgrade },
     { path: "/dashboard", name: "home", component: Home, meta: { requiresAuth: true, isAdmin: false } },
     { path: "/Competitors", name: "Competitors", component: Marketing, meta: { requiresAuth: true, isAdmin: false } },
     { path: "/content-generator", name: "contentgenerator", component: ContentGenerator, meta: { requiresAuth: true, isAdmin: false } },

@@ -23,7 +23,7 @@
           </div>
         </div>
         <Loader :showLoader="showLoader" />
-        <div v-if="!overview.channel_title" class="text-center">Please log in to view this data</div>
+        <div v-if="!user.subscribed" class="text-center">Please Add your "Youtube" account to access these features</div>
         <div class="py-6">
           <div v-if="overview.channel_title">
             <dl
@@ -137,6 +137,7 @@ const apiErrors = ref([]);
 const store = useTab();
 const user = ref(null);
 const overview = ref([]);
+const stats = ref([]);
 const tabKey = "currentTab";
 const overviewKeyPrefix = "youtubeOverview_";
 const isAccountAdded = ref(false);
